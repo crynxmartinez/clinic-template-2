@@ -471,9 +471,6 @@
             }
         }
         
-        // Check authentication on page load
-        checkAuth();
-        
         // Logout function
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
@@ -2412,3 +2409,6 @@
             const hour12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
             return `${hour12}:${minutes.toString().padStart(2, '0')} ${period}`;
         }
+        
+        // Check authentication on page load - MUST BE AT THE END after all functions are defined
+        checkAuth();
