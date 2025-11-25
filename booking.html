@@ -409,7 +409,6 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
-            await loadServices();
             await loadDoctors();
             renderCalendar();
         });
@@ -646,6 +645,9 @@
         async function selectDoctor(doctor) {
             selectedDoctor = doctor;
             
+            // Load doctor's services for the confirmation form
+            await loadDoctorServices(doctor.id);
+            
             // Show step 3
             document.getElementById('step2-doctors').classList.add('hidden');
             document.getElementById('step3-times').classList.remove('hidden');
@@ -657,6 +659,44 @@
             
             // Load and render time slots
             await renderTimeSlots(doctor);
+        }
+        
+        // Load services for selected doctor
+        async function loadDoctorServices(doctorId) {
+            try {
+                console.log('🔍 Loading services for doctor:', doctorId);
+                
+                const snapshot = await db.collection('services')
+                    .where('doctorId', '==', doctorId)
+                    .where('active', '==', true)
+                    .get();
+                
+                allServices = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                console.log(`✅ Loaded ${allServices.length} services for doctor`);
+                console.log('📋 Services:', allServices);
+                
+                // Populate service dropdown
+                const serviceSelect = document.getElementById('patient-service');
+                if (serviceSelect) {
+                    // Clear existing options except the first one
+                    serviceSelect.innerHTML = '<option value="">Choose a service...</option>';
+                    
+                    allServices.forEach(service => {
+                        const option = document.createElement('option');
+                        option.value = service.name;
+                        option.textContent = service.name;
+                        serviceSelect.appendChild(option);
+                        console.log('   ✅ Added service:', service.name);
+                    });
+                    
+                    if (allServices.length === 0) {
+                        console.warn('⚠️ No services available for this doctor!');
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error loading doctor services:', error);
+            }
         }
 
         // Render time slots
