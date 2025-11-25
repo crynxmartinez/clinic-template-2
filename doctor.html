@@ -2165,36 +2165,50 @@
                 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
                 const schedule = {};
                 
+                console.log('🔍 Starting to build schedule...');
+                
                 days.forEach(day => {
                     const isEnabled = document.getElementById(`schedule-${day}-enabled`).checked;
+                    console.log(`📅 ${day}: Main toggle = ${isEnabled}`);
+                    
                     if (isEnabled) {
                         const daySchedule = [];
                         
                         // Check AM period
                         const amEnabled = document.getElementById(`schedule-${day}-am-enabled`)?.checked;
+                        console.log(`   🌅 AM enabled: ${amEnabled}`);
                         if (amEnabled) {
                             const amStart = document.getElementById(`schedule-${day}-am-start`)?.value;
                             const amEnd = document.getElementById(`schedule-${day}-am-end`)?.value;
+                            console.log(`   🌅 AM times: ${amStart} - ${amEnd}`);
                             if (amStart && amEnd) {
                                 daySchedule.push({ period: 'am', start: amStart, end: amEnd });
+                                console.log(`   ✅ Added AM period`);
                             }
                         }
                         
                         // Check PM period
                         const pmEnabled = document.getElementById(`schedule-${day}-pm-enabled`)?.checked;
+                        console.log(`   🌆 PM enabled: ${pmEnabled}`);
                         if (pmEnabled) {
                             const pmStart = document.getElementById(`schedule-${day}-pm-start`)?.value;
                             const pmEnd = document.getElementById(`schedule-${day}-pm-end`)?.value;
+                            console.log(`   🌆 PM times: ${pmStart} - ${pmEnd}`);
                             if (pmStart && pmEnd) {
                                 daySchedule.push({ period: 'pm', start: pmStart, end: pmEnd });
+                                console.log(`   ✅ Added PM period`);
                             }
                         }
                         
                         schedule[day] = daySchedule;
+                        console.log(`   📊 ${day} final schedule:`, daySchedule);
                     } else {
                         schedule[day] = [];
+                        console.log(`   ❌ ${day} is OFF`);
                     }
                 });
+                
+                console.log('📦 Final schedule object:', schedule);
                 
                 // Update doctors collection
                 await db.collection('doctors').doc(doctorProfile.id).update({
