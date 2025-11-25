@@ -422,34 +422,27 @@
             measurementId: "G-7YM2Z0BY98"
         };
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
         const db = firebase.firestore();
         
         // Current user
         let currentUser = null;
         
-        // CRITICAL: Authentication and Clinic Access Check
-        auth.onAuthStateChanged(async (user) => {
-            if (!user) {
+        // CRITICAL: Authentication and Clinic Access Check (DATABASE-ONLY)
+        function checkAuth() {
+            const currentUserStr = localStorage.getItem('currentUser');
+            
+            if (!currentUserStr) {
                 window.location.href = 'login.html';
                 return;
             }
             
             try {
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                if (!userDoc.exists) {
-                    alert('User profile not found');
-                    await auth.signOut();
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                const userData = userDoc.data();
+                const userData = JSON.parse(currentUserStr);
                 
                 // CHECK: User belongs to THIS clinic
                 if (userData.clinicId !== CLINIC_ID) {
                     alert(`Access denied. You do not have access to ${CLINIC_NAME}`);
-                    await auth.signOut();
+                    localStorage.removeItem('currentUser');
                     window.location.href = 'login.html';
                     return;
                 }
@@ -457,20 +450,12 @@
                 // CHECK: User is doctor
                 if (userData.role !== 'doctor') {
                     alert('Access denied. Doctor access required.');
-                    await auth.signOut();
+                    localStorage.removeItem('currentUser');
                     window.location.href = 'login.html';
                     return;
                 }
                 
-                // CHECK: User is active
-                if (userData.active === false) {
-                    alert('Your account has been deactivated');
-                    await auth.signOut();
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                currentUser = { uid: user.uid, ...userData };
+                currentUser = userData;
                 document.getElementById('user-name').textContent = userData.name || 'Doctor';
                 
                 console.log('✅ Doctor authenticated:', userData.name, '- Clinic:', CLINIC_NAME);
@@ -481,15 +466,18 @@
             } catch (error) {
                 console.error('Auth error:', error);
                 alert('Authentication error. Please try again.');
-                await auth.signOut();
+                localStorage.removeItem('currentUser');
                 window.location.href = 'login.html';
             }
-        });
+        }
+        
+        // Check authentication on page load
+        checkAuth();
         
         // Logout function
-        async function logout() {
+        function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                await auth.signOut();
+                localStorage.removeItem('currentUser');
                 window.location.href = 'login.html';
             }
         }

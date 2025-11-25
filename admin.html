@@ -454,7 +454,6 @@
     <div id="toast-container" class="fixed top-4 right-4 z-50"></div>
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
     <script>
@@ -468,7 +467,6 @@
             measurementId: "G-7YM2Z0BY98"
         };
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
         const db = firebase.firestore();
         
         // Current user
@@ -669,9 +667,6 @@
             if (section === 'calendar') loadCalendar();
             if (section === 'analytics') loadAnalytics();
         }
-        
-        // Firebase auth handles protection via onAuthStateChanged
-        // loadDashboard() is called after successful auth (line 528)
         
         async function loadDashboard() {
             try {
