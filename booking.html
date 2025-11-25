@@ -417,23 +417,46 @@
         // Load services from Firebase (FILTERED BY CLINIC_ID)
         async function loadServices() {
             try {
-                const snapshot = await db.collection('services')
+                console.log('🔍 Loading services for clinic:', CLINIC_ID, CLINIC_NAME);
+                
+                // First, try to load services with clinicId filter
+                let snapshot = await db.collection('services')
                     .where('clinicId', '==', CLINIC_ID)
                     .where('active', '==', true)
                     .get();
+                
+                // If no services found, load all active services (fallback for old data)
+                if (snapshot.empty) {
+                    console.log('⚠️ No services found with clinicId filter, loading all active services...');
+                    snapshot = await db.collection('services')
+                        .where('active', '==', true)
+                        .get();
+                }
+                
                 allServices = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
                 console.log(`✅ Loaded ${allServices.length} services for clinic: ${CLINIC_NAME}`);
+                console.log('📋 Services:', allServices);
                 
                 const serviceSelect = document.getElementById('patient-service');
+                if (!serviceSelect) {
+                    console.error('❌ Service select element not found!');
+                    return;
+                }
+                
                 allServices.forEach(service => {
                     const option = document.createElement('option');
                     option.value = service.name;
                     option.textContent = service.name;
                     serviceSelect.appendChild(option);
+                    console.log('   ✅ Added service:', service.name);
                 });
+                
+                if (allServices.length === 0) {
+                    console.warn('⚠️ No services available! Please add services in admin panel.');
+                }
             } catch (error) {
-                console.error('Error loading services:', error);
+                console.error('❌ Error loading services:', error);
             }
         }
 
