@@ -10,7 +10,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -68,67 +68,7 @@
             background: #f3f4f6;
         }
         
-        /* Arabic Font */
-        html[lang="ar"] {
-            font-family: 'Cairo', sans-serif;
-        }
         
-        /* Language Toggle Styles */
-        .lang-btn {
-            font-weight: 600;
-            color: #6b7280;
-        }
-        .lang-btn.active {
-            background-color: #0066cc;
-            color: white;
-        }
-        
-        /* RTL Support */
-        html[dir="rtl"] {
-            direction: rtl;
-        }
-        html[dir="rtl"] .sidebar {
-            left: auto;
-            right: 0;
-        }
-        html[dir="rtl"] .mr-2 {
-            margin-right: 0;
-            margin-left: 0.5rem;
-        }
-        html[dir="rtl"] .mr-3 {
-            margin-right: 0;
-            margin-left: 0.75rem;
-        }
-        html[dir="rtl"] .ml-2 {
-            margin-left: 0;
-            margin-right: 0.5rem;
-        }
-        html[dir="rtl"] .ml-3 {
-            margin-left: 0;
-            margin-right: 0.75rem;
-        }
-        html[dir="rtl"] .space-x-4 > * + * {
-            margin-left: 0;
-            margin-right: 1rem;
-        }
-        html[dir="rtl"] .space-x-3 > * + * {
-            margin-left: 0;
-            margin-right: 0.75rem;
-        }
-        html[dir="rtl"] .space-x-2 > * + * {
-            margin-left: 0;
-            margin-right: 0.5rem;
-        }
-        html[dir="rtl"] .text-left {
-            text-align: right;
-        }
-        html[dir="rtl"] .text-right {
-            text-align: left;
-        }
-        @media (max-width: 768px) {
-            html[dir="rtl"] .sidebar { transform: translateX(100%); }
-            html[dir="rtl"] .sidebar.active { transform: translateX(0); }
-        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -139,26 +79,16 @@
                 <div class="flex items-center space-x-3">
                     <i class="fas fa-tooth text-primary text-2xl"></i>
                     <div>
-                        <h1 class="text-xl font-bold text-gray-800" data-translate="Clinic Management">Clinic Management</h1>
-                        <p class="text-xs text-gray-600" data-translate="Doctor Portal">Doctor Portal</p>
+                        <h1 class="text-xl font-bold text-gray-800">Clinic Management</h1>
+                        <p class="text-xs text-gray-600">Doctor Portal</p>
                     </div>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
                 <span class="text-gray-700 font-semibold hidden md:inline" id="user-name"></span>
                 
-                <!-- Language Toggle -->
-                <div class="flex items-center bg-gray-100 rounded-lg p-1">
-                    <button onclick="switchLanguage('en')" id="lang-en" class="lang-btn px-3 py-1 rounded-md transition active">
-                        EN
-                    </button>
-                    <button onclick="switchLanguage('ar')" id="lang-ar" class="lang-btn px-3 py-1 rounded-md transition">
-                        AR
-                    </button>
-                </div>
-                
                 <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
-                    <i class="fas fa-sign-out-alt mr-2"></i><span class="hidden md:inline" data-translate="Logout">Logout</span>
+                    <i class="fas fa-sign-out-alt mr-2"></i><span class="hidden md:inline">Logout</span>
                 </button>
             </div>
         </div>
@@ -168,13 +98,13 @@
         <div id="sidebar" class="sidebar fixed md:static inset-y-0 left-0 z-50 w-64 bg-gray-800 text-white md:block h-screen overflow-y-auto">
             <nav class="p-4 space-y-2 mt-16 md:mt-4">
                 <button onclick="showSection('kanban')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition active">
-                    <i class="fas fa-columns mr-3"></i><span data-translate="Appointment Board">Appointment Board</span>
+                    <i class="fas fa-columns mr-3"></i><span>Appointment Board</span>
                 </button>
                 <button onclick="showSection('services')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
-                    <i class="fas fa-briefcase-medical mr-3"></i><span data-translate="Services">Services</span>
+                    <i class="fas fa-briefcase-medical mr-3"></i><span>Services</span>
                 </button>
                 <button onclick="showSection('availability')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
-                    <i class="fas fa-calendar-alt mr-3"></i><span data-translate="Availability">Availability</span>
+                    <i class="fas fa-calendar-alt mr-3"></i><span>Availability</span>
                 </button>
             </nav>
         </div>
@@ -183,19 +113,19 @@
             <!-- Kanban Board -->
             <div id="section-kanban" class="section">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-3xl font-bold text-gray-800" id="kanban-title" data-translate="Appointment Board">Appointment Board</h2>
+                    <h2 class="text-3xl font-bold text-gray-800" id="kanban-title">Appointment Board</h2>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2 text-sm">
-                            <i class="fas fa-calendar-alt text-primary mr-2"></i><span data-translate="Filter by Date Range">Filter by Date Range</span>
+                            <i class="fas fa-calendar-alt text-primary mr-2"></i><span>Filter by Date Range</span>
                         </label>
-                        <input type="text" id="kanban-date-filter" data-placeholder="Select date range (optional)" placeholder="Select date range (optional)" class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition cursor-pointer" readonly>
+                        <input type="text" id="kanban-date-filter" placeholder="Select date range (optional)" class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition cursor-pointer" readonly>
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                     <div class="bg-blue-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-blue-800" data-translate="Booked">Booked</h3>
+                            <h3 class="font-bold text-blue-800">Booked</h3>
                             <span class="bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-booked">0</span>
                         </div>
                         <div id="kanban-booked" class="kanban-column space-y-2"></div>
@@ -203,7 +133,7 @@
                     
                     <div class="bg-purple-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-purple-800" data-translate="Approve">Approve</h3>
+                            <h3 class="font-bold text-purple-800">Approve</h3>
                             <span class="bg-purple-200 text-purple-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-approve">0</span>
                         </div>
                         <div id="kanban-approve" class="kanban-column space-y-2"></div>
@@ -211,7 +141,7 @@
                     
                     <div class="bg-green-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-green-800" data-translate="Appointment">Appointment</h3>
+                            <h3 class="font-bold text-green-800">Appointment</h3>
                             <span class="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-appointment">0</span>
                         </div>
                         <div id="kanban-appointment" class="kanban-column space-y-2"></div>
@@ -219,7 +149,7 @@
                     
                     <div class="bg-orange-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-orange-800" data-translate="Missed">Missed</h3>
+                            <h3 class="font-bold text-orange-800">Missed</h3>
                             <span class="bg-orange-200 text-orange-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-missed">0</span>
                         </div>
                         <div id="kanban-missed" class="kanban-column space-y-2"></div>
@@ -227,7 +157,7 @@
                     
                     <div class="bg-red-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-red-800" data-translate="Cancelled">Cancelled</h3>
+                            <h3 class="font-bold text-red-800">Cancelled</h3>
                             <span class="bg-red-200 text-red-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-cancelled">0</span>
                         </div>
                         <div id="kanban-cancelled" class="kanban-column space-y-2"></div>
@@ -235,7 +165,7 @@
                     
                     <div class="bg-gray-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-gray-800" data-translate="Completed">Completed</h3>
+                            <h3 class="font-bold text-gray-800">Completed</h3>
                             <span class="bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-completed">0</span>
                         </div>
                         <div id="kanban-completed" class="kanban-column space-y-2"></div>
@@ -245,16 +175,16 @@
             
             <!-- Services Section -->
             <div id="section-services" class="section hidden">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6" data-translate="Manage Services">Manage Services</h2>
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Manage Services</h2>
                 
                 <!-- Tab Navigation -->
                 <div class="bg-white rounded-xl shadow-lg mb-6">
                     <div class="flex border-b">
                         <button onclick="switchServiceTab('my-services')" id="tab-my-services" class="service-tab flex-1 px-6 py-4 font-semibold text-gray-700 border-b-2 border-primary bg-blue-50 transition">
-                            <i class="fas fa-list mr-2"></i><span data-translate="My Services">My Services</span>
+                            <i class="fas fa-list mr-2"></i><span>My Services</span>
                         </button>
                         <button onclick="switchServiceTab('browse-global')" id="tab-browse-global" class="service-tab flex-1 px-6 py-4 font-semibold text-gray-500 border-b-2 border-transparent hover:bg-gray-50 transition">
-                            <i class="fas fa-globe mr-2"></i><span data-translate="Browse Global Services">Browse Global Services</span>
+                            <i class="fas fa-globe mr-2"></i><span>Browse Global Services</span>
                         </button>
                     </div>
                 </div>
@@ -263,7 +193,7 @@
                 <div id="tab-content-my-services" class="tab-content">
                     <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
                         <button onclick="showAddServiceModal()" class="bg-gradient-to-r from-primary to-blue-600 text-white px-6 py-3 rounded-lg hover:shadow-lg transition">
-                            <i class="fas fa-plus mr-2"></i><span data-translate="Create Custom Service">Create Custom Service</span>
+                            <i class="fas fa-plus mr-2"></i><span>Create Custom Service</span>
                         </button>
                     </div>
                     <div id="services-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -275,8 +205,8 @@
                         <div class="flex items-start">
                             <i class="fas fa-info-circle text-primary text-xl mr-3 mt-1"></i>
                             <div>
-                                <h4 class="font-bold text-gray-800 mb-1" data-translate="Global Services Info">Global Services</h4>
-                                <p class="text-sm text-gray-700" data-translate="These are clinic-wide services created by the administrator. You can add them to your profile and customize pricing or duration.">
+                                <h4 class="font-bold text-gray-800 mb-1">Global Services</h4>
+                                <p class="text-sm text-gray-700">
                                     These are clinic-wide services created by the administrator. You can add them to your profile and customize pricing or duration.
                                 </p>
                             </div>
@@ -311,43 +241,43 @@
             
             <!-- Availability Section -->
             <div id="section-availability" class="section hidden">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6"><span data-translate="Manage Availability">⚙️ Manage Availability</span></h2>
+                <h2 class="text-3xl font-bold text-gray-800 mb-6"><span>⚙️ Manage Availability</span></h2>
                 
                 <!-- Appointment Settings -->
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-cog text-primary mr-2"></i><span data-translate="Appointment Settings">Appointment Settings</span>
+                        <i class="fas fa-cog text-primary mr-2"></i><span>Appointment Settings</span>
                     </h3>
                     
                     <!-- Duration Selection -->
                     <div class="mb-6">
                         <label class="block text-gray-700 font-semibold mb-3 flex items-center">
-                            <i class="fas fa-clock text-primary mr-2"></i><span data-translate="Appointment Duration">Appointment Duration</span>
+                            <i class="fas fa-clock text-primary mr-2"></i><span>Appointment Duration</span>
                         </label>
                         <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
                             <button onclick="selectDuration(15)" data-duration="15" class="duration-btn px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition text-center">
                                 <div class="text-2xl font-bold text-gray-800">15</div>
-                                <div class="text-xs text-gray-600" data-translate="minutes">minutes</div>
+                                <div class="text-xs text-gray-600">minutes</div>
                             </button>
                             <button onclick="selectDuration(20)" data-duration="20" class="duration-btn px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition text-center">
                                 <div class="text-2xl font-bold text-gray-800">20</div>
-                                <div class="text-xs text-gray-600" data-translate="minutes">minutes</div>
+                                <div class="text-xs text-gray-600">minutes</div>
                             </button>
                             <button onclick="selectDuration(30)" data-duration="30" class="duration-btn px-4 py-3 border-2 border-primary bg-blue-50 rounded-lg transition text-center">
                                 <div class="text-2xl font-bold text-primary">30</div>
-                                <div class="text-xs text-primary" data-translate="minutes">minutes</div>
+                                <div class="text-xs text-primary">minutes</div>
                             </button>
                             <button onclick="selectDuration(45)" data-duration="45" class="duration-btn px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition text-center">
                                 <div class="text-2xl font-bold text-gray-800">45</div>
-                                <div class="text-xs text-gray-600" data-translate="minutes">minutes</div>
+                                <div class="text-xs text-gray-600">minutes</div>
                             </button>
                             <button onclick="selectDuration(60)" data-duration="60" class="duration-btn px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition text-center">
                                 <div class="text-2xl font-bold text-gray-800">60</div>
-                                <div class="text-xs text-gray-600" data-translate="minutes">minutes</div>
+                                <div class="text-xs text-gray-600">minutes</div>
                             </button>
                             <button onclick="selectDuration(90)" data-duration="90" class="duration-btn px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition text-center">
                                 <div class="text-2xl font-bold text-gray-800">90</div>
-                                <div class="text-xs text-gray-600" data-translate="minutes">minutes</div>
+                                <div class="text-xs text-gray-600">minutes</div>
                             </button>
                         </div>
                     </div>
@@ -355,28 +285,28 @@
                     <!-- Buffer Time Selection -->
                     <div class="mb-4">
                         <label class="block text-gray-700 font-semibold mb-3 flex items-center">
-                            <i class="fas fa-hourglass-half text-primary mr-2"></i><span data-translate="Buffer Time Between Appointments">Buffer Time Between Appointments</span>
+                            <i class="fas fa-hourglass-half text-primary mr-2"></i><span>Buffer Time Between Appointments</span>
                         </label>
                         <div class="grid grid-cols-5 gap-3">
                             <button onclick="selectBuffer(0)" data-buffer="0" class="buffer-btn px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition text-center">
                                 <div class="text-2xl font-bold text-gray-800">0</div>
-                                <div class="text-xs text-gray-600" data-translate="min">min</div>
+                                <div class="text-xs text-gray-600">min</div>
                             </button>
                             <button onclick="selectBuffer(5)" data-buffer="5" class="buffer-btn px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition text-center">
                                 <div class="text-2xl font-bold text-gray-800">5</div>
-                                <div class="text-xs text-gray-600" data-translate="min">min</div>
+                                <div class="text-xs text-gray-600">min</div>
                             </button>
                             <button onclick="selectBuffer(10)" data-buffer="10" class="buffer-btn px-4 py-3 border-2 border-primary bg-blue-50 rounded-lg transition text-center">
                                 <div class="text-2xl font-bold text-primary">10</div>
-                                <div class="text-xs text-primary" data-translate="min">min</div>
+                                <div class="text-xs text-primary">min</div>
                             </button>
                             <button onclick="selectBuffer(15)" data-buffer="15" class="buffer-btn px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition text-center">
                                 <div class="text-2xl font-bold text-gray-800">15</div>
-                                <div class="text-xs text-gray-600" data-translate="min">min</div>
+                                <div class="text-xs text-gray-600">min</div>
                             </button>
                             <button onclick="selectBuffer(20)" data-buffer="20" class="buffer-btn px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition text-center">
                                 <div class="text-2xl font-bold text-gray-800">20</div>
-                                <div class="text-xs text-gray-600" data-translate="min">min</div>
+                                <div class="text-xs text-gray-600">min</div>
                             </button>
                         </div>
                     </div>
@@ -384,7 +314,7 @@
                     <div class="bg-blue-50 border-l-4 border-primary p-4 rounded">
                         <p class="text-sm text-gray-700">
                             <i class="fas fa-lightbulb text-primary mr-2"></i>
-                            <strong data-translate="Tip">Tip</strong>: <span data-translate="Buffer time helps you prepare between appointments and avoid running late.">Buffer time helps you prepare between appointments and avoid running late.</span>
+                            <strong>Tip</strong>: <span>Buffer time helps you prepare between appointments and avoid running late.</span>
                         </p>
                     </div>
                 </div>
@@ -393,11 +323,11 @@
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-xl font-bold text-gray-800 flex items-center">
-                            <i class="fas fa-calendar-week text-primary mr-2"></i><span data-translate="Weekly Schedule">Weekly Schedule</span>
+                            <i class="fas fa-calendar-week text-primary mr-2"></i><span>Weekly Schedule</span>
                         </h3>
                         <div class="flex space-x-2">
                             <button onclick="copyToWeekdays()" class="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition text-sm font-semibold">
-                                <i class="fas fa-copy mr-1"></i><span data-translate="Copy to Weekdays">Copy to Weekdays</span>
+                                <i class="fas fa-copy mr-1"></i><span>Copy to Weekdays</span>
                             </button>
                             <button onclick="copyToAll()" class="bg-purple-100 text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-200 transition text-sm font-semibold">
                                 <i class="fas fa-clone mr-1"></i>Copy to All
@@ -2487,369 +2417,3 @@
             const hour12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
             return `${hour12}:${minutes.toString().padStart(2, '0')} ${period}`;
         }
-        
-        // ==================== TRANSLATION SYSTEM ====================
-        
-        const translations = {
-            en: {
-                // Navigation
-                "Clinic Management": "Clinic Management",
-                "Doctor Portal": "Doctor Portal",
-                "Appointment Board": "Appointment Board",
-                "Services": "Services",
-                "Availability": "Availability",
-                "Logout": "Logout",
-                
-                // Kanban Section
-                "Filter by Date Range": "Filter by Date Range",
-                "Select date range (optional)": "Select date range (optional)",
-                "Booked": "Booked",
-                "Approve": "Approve",
-                "Appointment": "Appointment",
-                "Missed": "Missed",
-                "Cancelled": "Cancelled",
-                "Completed": "Completed",
-                
-                // Services Section
-                "Manage Services": "Manage Services",
-                "Add Service": "Add Service",
-                
-                // Availability Section
-                "Manage Availability": "⚙️ Manage Availability",
-                "Appointment Settings": "Appointment Settings",
-                "Appointment Duration": "Appointment Duration",
-                "minutes": "minutes",
-                "Buffer Time Between Appointments": "Buffer Time Between Appointments",
-                "min": "min",
-                "Tip": "Tip",
-                "Buffer time helps you prepare between appointments and avoid running late.": "Buffer time helps you prepare between appointments and avoid running late.",
-                "Weekly Schedule": "Weekly Schedule",
-                "Copy to Weekdays": "Copy to Weekdays",
-                "Copy to All": "Copy to All",
-                
-                // Transfer Modal
-                "Transfer Doctor": "Transfer Doctor",
-                "Warning": "Warning",
-                "After transferring this appointment, it will no longer appear in your Kanban board.": "After transferring this appointment, it will no longer appear in your Kanban board.",
-                "Patient": "Patient",
-                "Date": "Date",
-                "Time": "Time",
-                "Current Doctor": "Current Doctor",
-                "Transfer to": "Transfer to",
-                "Select a doctor": "Select a doctor...",
-                "Reason (Optional)": "Reason (Optional)",
-                "e.g., Emergency coverage, schedule conflict...": "e.g., Emergency coverage, schedule conflict...",
-                "Cancel": "Cancel",
-                "Confirm Transfer": "Confirm Transfer",
-                
-                // Common
-                "Close": "Close",
-                "Save": "Save",
-                "Delete": "Delete",
-                "Edit": "Edit",
-                "Add": "Add",
-                "View": "View",
-                "Loading": "Loading...",
-                "Success": "Success",
-                "Error": "Error",
-                
-                // Global Services (Doctor)
-                "My Services": "My Services",
-                "Browse Global Services": "Browse Global Services",
-                "Global Services Info": "Global Services",
-                "These are clinic-wide services created by the administrator. You can add them to your profile and customize pricing or duration.": "These are clinic-wide services created by the administrator. You can add them to your profile and customize pricing or duration.",
-                "Create Custom Service": "Create Custom Service",
-                "Search services...": "Search services...",
-                "All Categories": "All Categories",
-                "Add to My Services": "Add to My Services",
-                "Global": "Global",
-                "Custom": "Custom",
-                "No global services found": "No global services found",
-                "Add Global Service to My Services": "Add Global Service to My Services",
-                "You can customize the price and duration for your practice. The service name and category will be copied from the global template.": "You can customize the price and duration for your practice. The service name and category will be copied from the global template.",
-                "Default Duration": "Default Duration",
-                "Your Duration (minutes)": "Your Duration (minutes)",
-                "Your Price": "Your Price",
-                "Additional Notes (Optional)": "Additional Notes (Optional)",
-                "Add your own notes or modify the description...": "Add your own notes or modify the description...",
-                "Active (available for booking)": "Active (available for booking)",
-                "Service Name": "Service Name",
-                "Category": "Category",
-                "Duration (minutes)": "Duration (minutes)",
-                "Price": "Price",
-                "Currency": "Currency",
-                "Description": "Description",
-                "Select Category": "Select Category",
-                "Consultation": "Consultation",
-                "Dental": "Dental",
-                "Procedure": "Procedure",
-                "Follow-up": "Follow-up",
-                "Surgery": "Surgery",
-                "Therapy": "Therapy",
-                "General Checkup": "General Checkup",
-                "Emergency": "Emergency",
-                "SR Saudi Riyal": "SR Saudi Riyal",
-                "AED UAE Dirham": "AED UAE Dirham",
-                "$ USD": "$ USD",
-                "€ EUR": "€ EUR",
-                "£ GBP": "£ GBP",
-                "Active": "Active",
-                "Inactive": "Inactive",
-                "View Details": "View Details",
-                "No description": "No description",
-                "Free": "Free",
-                "minutes": "minutes",
-                "Add New Service": "Add New Service",
-                "Edit Service": "Edit Service",
-                "Save Service": "Save Service",
-                "Update Service": "Update Service",
-                "e.g., Dental Cleaning": "e.g., Dental Cleaning",
-                "Brief description of the service...": "Brief description of the service..."
-            },
-            ar: {
-                // Navigation
-                "Clinic Management": "إدارة العيادة",
-                "Doctor Portal": "بوابة الطبيب",
-                "Appointment Board": "لوحة المواعيد",
-                "Services": "الخدمات",
-                "Availability": "التوفر",
-                "Logout": "تسجيل الخروج",
-                
-                // Kanban Section
-                "Filter by Date Range": "تصفية حسب نطاق التاريخ",
-                "Select date range (optional)": "اختر نطاق التاريخ (اختياري)",
-                "Booked": "محجوز",
-                "Approve": "موافقة",
-                "Appointment": "موعد",
-                "Missed": "فائت",
-                "Cancelled": "ملغي",
-                "Completed": "مكتمل",
-                
-                // Services Section
-                "Manage Services": "إدارة الخدمات",
-                "Add Service": "إضافة خدمة",
-                
-                // Availability Section
-                "Manage Availability": "⚙️ إدارة التوفر",
-                "Appointment Settings": "إعدادات المواعيد",
-                "Appointment Duration": "مدة الموعد",
-                "minutes": "دقيقة",
-                "Buffer Time Between Appointments": "الوقت الفاصل بين المواعيد",
-                "min": "دقيقة",
-                "Tip": "نصيحة",
-                "Buffer time helps you prepare between appointments and avoid running late.": "الوقت الفاصل يساعدك على الاستعداد بين المواعيد وتجنب التأخير.",
-                "Weekly Schedule": "الجدول الأسبوعي",
-                "Copy to Weekdays": "نسخ إلى أيام الأسبوع",
-                "Copy to All": "نسخ للكل",
-                
-                // Transfer Modal
-                "Transfer Doctor": "نقل الطبيب",
-                "Warning": "تحذير",
-                "After transferring this appointment, it will no longer appear in your Kanban board.": "بعد نقل هذا الموعد، لن يظهر في لوحة المواعيد الخاصة بك.",
-                "Patient": "المريض",
-                "Date": "التاريخ",
-                "Time": "الوقت",
-                "Current Doctor": "الطبيب الحالي",
-                "Transfer to": "النقل إلى",
-                "Select a doctor": "اختر طبيبًا...",
-                "Reason (Optional)": "السبب (اختياري)",
-                "e.g., Emergency coverage, schedule conflict...": "مثال: تغطية طارئة، تعارض في الجدول...",
-                "Cancel": "إلغاء",
-                "Confirm Transfer": "تأكيد النقل",
-                
-                // Common
-                "Close": "إغلاق",
-                "Save": "حفظ",
-                "Delete": "حذف",
-                "Edit": "تعديل",
-                "Add": "إضافة",
-                "View": "عرض",
-                "Loading": "جاري التحميل...",
-                "Success": "نجح",
-                "Error": "خطأ",
-                
-                // Global Services (Doctor)
-                "My Services": "خدماتي",
-                "Browse Global Services": "تصفح الخدمات العالمية",
-                "Global Services Info": "الخدمات العالمية",
-                "These are clinic-wide services created by the administrator. You can add them to your profile and customize pricing or duration.": "هذه خدمات على مستوى العيادة أنشأها المسؤول. يمكنك إضافتها إلى ملفك الشخصي وتخصيص الأسعار أو المدة.",
-                "Create Custom Service": "إنشاء خدمة مخصصة",
-                "Search services...": "ابحث عن الخدمات...",
-                "All Categories": "جميع الفئات",
-                "Add to My Services": "إضافة إلى خدماتي",
-                "Global": "عالمي",
-                "Custom": "مخصص",
-                "No global services found": "لم يتم العثور على خدمات عالمية",
-                "Add Global Service to My Services": "إضافة خدمة عالمية إلى خدماتي",
-                "You can customize the price and duration for your practice. The service name and category will be copied from the global template.": "يمكنك تخصيص السعر والمدة لممارستك. سيتم نسخ اسم الخدمة والفئة من القالب العالمي.",
-                "Default Duration": "المدة الافتراضية",
-                "Your Duration (minutes)": "مدتك (دقائق)",
-                "Your Price": "سعرك",
-                "Additional Notes (Optional)": "ملاحظات إضافية (اختياري)",
-                "Add your own notes or modify the description...": "أضف ملاحظاتك الخاصة أو عدل الوصف...",
-                "Active (available for booking)": "نشط (متاح للحجز)",
-                "Service Name": "اسم الخدمة",
-                "Category": "الفئة",
-                "Duration (minutes)": "المدة (دقائق)",
-                "Price": "السعر",
-                "Currency": "العملة",
-                "Description": "الوصف",
-                "Select Category": "اختر الفئة",
-                "Consultation": "استشارة",
-                "Dental": "أسنان",
-                "Procedure": "إجراء",
-                "Follow-up": "متابعة",
-                "Surgery": "جراحة",
-                "Therapy": "علاج",
-                "General Checkup": "فحص عام",
-                "Emergency": "طوارئ",
-                "SR Saudi Riyal": "ريال سعودي",
-                "AED UAE Dirham": "درهم إماراتي",
-                "$ USD": "دولار أمريكي",
-                "€ EUR": "يورو",
-                "£ GBP": "جنيه إسترليني",
-                "Active": "نشط",
-                "Inactive": "غير نشط",
-                "View Details": "عرض التفاصيل",
-                "No description": "لا يوجد وصف",
-                "Free": "مجاني",
-                "minutes": "دقيقة",
-                "Add New Service": "إضافة خدمة جديدة",
-                "Edit Service": "تعديل الخدمة",
-                "Save Service": "حفظ الخدمة",
-                "Update Service": "تحديث الخدمة",
-                "e.g., Dental Cleaning": "مثال: تنظيف الأسنان",
-                "Brief description of the service...": "وصف موجز للخدمة..."
-            }
-        };
-        
-        let currentLanguage = 'en';
-        
-        // Helper function to translate text
-        function t(key) {
-            return translations[currentLanguage][key] || key;
-        }
-        
-        // Switch language function
-        function switchLanguage(lang) {
-            currentLanguage = lang;
-            
-            // Update HTML attributes
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            
-            // Update toggle buttons
-            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
-            
-            // Translate all elements with data-translate attribute
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (translations[lang][key]) {
-                    element.textContent = translations[lang][key];
-                }
-            });
-            
-            // Translate all placeholders with data-placeholder attribute
-            document.querySelectorAll('[data-placeholder]').forEach(element => {
-                const key = element.getAttribute('data-placeholder');
-                if (translations[lang][key]) {
-                    element.placeholder = translations[lang][key];
-                }
-            });
-            
-            // Save language preference
-            localStorage.setItem('preferredLanguage', lang);
-            
-            // Reload dynamic content if needed
-            const activeSection = document.querySelector('.section:not(.hidden)');
-            if (activeSection) {
-                const sectionId = activeSection.id.replace('section-', '');
-                if (sectionId === 'kanban') loadKanban();
-                if (sectionId === 'services') loadServices();
-                if (sectionId === 'availability') loadAvailability();
-            }
-        }
-        
-        // Load saved language on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('preferredLanguage') || 'en';
-            if (savedLang === 'ar') {
-                switchLanguage('ar');
-            }
-        });
-    </script>
-    
-    <!-- Transfer Doctor Modal -->
-    <div id="transfer-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">
-                <i class="fas fa-exchange-alt text-blue-500 mr-2"></i><span data-translate="Transfer Doctor">Transfer Doctor</span>
-            </h2>
-            
-            <!-- Warning Banner -->
-            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-4 rounded">
-                <div class="flex items-start">
-                    <i class="fas fa-exclamation-triangle text-yellow-600 text-xl mr-3 mt-0.5"></i>
-                    <div>
-                        <p class="text-sm font-semibold text-yellow-800 mb-1" data-translate="Warning">Warning</p>
-                        <p class="text-sm text-yellow-700" data-translate="After transferring this appointment, it will no longer appear in your Kanban board.">
-                            After transferring this appointment, it will no longer appear in your Kanban board.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Current Appointment Info -->
-            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded">
-                <p class="text-sm text-gray-700 mb-1">
-                    <strong data-translate="Patient">Patient</strong>: <span id="transfer-patient-name"></span>
-                </p>
-                <p class="text-sm text-gray-700 mb-1">
-                    <strong data-translate="Date">Date</strong>: <span id="transfer-date"></span>
-                </p>
-                <p class="text-sm text-gray-700 mb-1">
-                    <strong data-translate="Time">Time</strong>: <span id="transfer-time"></span>
-                </p>
-                <p class="text-sm text-gray-700">
-                    <strong data-translate="Current Doctor">Current Doctor</strong>: <span id="transfer-current-doctor"></span>
-                </p>
-            </div>
-            
-            <!-- New Doctor Selection -->
-            <div class="mb-4">
-                <label class="block text-gray-700 font-semibold mb-2">
-                    <i class="fas fa-user-md text-blue-500 mr-2"></i><span data-translate="Transfer to">Transfer to</span>:
-                </label>
-                <select id="transfer-new-doctor" required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    <option value="" data-translate="Select a doctor">Select a doctor...</option>
-                </select>
-            </div>
-            
-            <!-- Reason (Optional) -->
-            <div class="mb-4">
-                <label class="block text-gray-700 font-semibold mb-2">
-                    <i class="fas fa-comment text-blue-500 mr-2"></i><span data-translate="Reason (Optional)">Reason (Optional)</span>:
-                </label>
-                <textarea id="transfer-reason" rows="3" 
-                          data-placeholder="e.g., Emergency coverage, schedule conflict..."
-                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                          placeholder="e.g., Emergency coverage, schedule conflict..."></textarea>
-            </div>
-            
-            <!-- Action Buttons -->
-            <div class="flex space-x-3">
-                <button onclick="closeTransferModal()" 
-                        class="flex-1 bg-gray-200 text-gray-700 px-4 py-3 rounded-lg font-semibold hover:bg-gray-300 transition">
-                    <span data-translate="Cancel">Cancel</span>
-                </button>
-                <button onclick="confirmTransferDoctor()" 
-                        class="flex-1 bg-blue-500 text-white px-4 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
-                    <i class="fas fa-check mr-2"></i><span data-translate="Confirm Transfer">Confirm Transfer</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</body>
-</html>

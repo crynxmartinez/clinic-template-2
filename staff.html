@@ -10,7 +10,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap">
+    
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -40,59 +40,7 @@
         .sortable-ghost { opacity: 0.4; }
         .kanban-column { min-height: 200px; }
         
-        /* Arabic Font */
-        html[lang="ar"] {
-            font-family: 'Cairo', sans-serif;
-        }
         
-        /* Language Toggle Styles */
-        .lang-btn {
-            font-weight: 600;
-            color: #6b7280;
-        }
-        .lang-btn.active {
-            background-color: #0066cc;
-            color: white;
-        }
-        
-        /* RTL Support */
-        html[dir="rtl"] {
-            direction: rtl;
-        }
-        html[dir="rtl"] .sidebar {
-            left: auto;
-            right: 0;
-        }
-        html[dir="rtl"] .mr-3 {
-            margin-right: 0;
-            margin-left: 0.75rem;
-        }
-        html[dir="rtl"] .ml-3 {
-            margin-left: 0;
-            margin-right: 0.75rem;
-        }
-        html[dir="rtl"] .space-x-4 > * + * {
-            margin-left: 0;
-            margin-right: 1rem;
-        }
-        html[dir="rtl"] .space-x-3 > * + * {
-            margin-left: 0;
-            margin-right: 0.75rem;
-        }
-        html[dir="rtl"] .space-x-2 > * + * {
-            margin-left: 0;
-            margin-right: 0.5rem;
-        }
-        html[dir="rtl"] .text-left {
-            text-align: right;
-        }
-        html[dir="rtl"] .text-right {
-            text-align: left;
-        }
-        @media (max-width: 768px) {
-            html[dir="rtl"] .sidebar { transform: translateX(100%); }
-            html[dir="rtl"] .sidebar.active { transform: translateX(0); }
-        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -103,26 +51,16 @@
                 <div class="flex items-center space-x-3">
                     <i class="fas fa-tooth text-primary text-2xl"></i>
                     <div>
-                        <h1 class="text-xl font-bold text-gray-800" data-translate="Clinic Management">Clinic Management</h1>
-                        <p class="text-xs text-gray-600" data-translate="Staff Portal">Staff Portal</p>
+                        <h1 class="text-xl font-bold text-gray-800">Clinic Management</h1>
+                        <p class="text-xs text-gray-600">Staff Portal</p>
                     </div>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
                 <span class="text-gray-700 font-semibold hidden md:inline" id="user-name"></span>
                 
-                <!-- Language Toggle -->
-                <div class="flex items-center bg-gray-100 rounded-lg p-1">
-                    <button onclick="switchLanguage('en')" id="lang-en" class="lang-btn px-3 py-1 rounded-md transition active">
-                        EN
-                    </button>
-                    <button onclick="switchLanguage('ar')" id="lang-ar" class="lang-btn px-3 py-1 rounded-md transition">
-                        AR
-                    </button>
-                </div>
-                
                 <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
-                    <i class="fas fa-sign-out-alt mr-2"></i><span class="hidden md:inline" data-translate="Logout">Logout</span>
+                    <i class="fas fa-sign-out-alt mr-2"></i><span class="hidden md:inline">Logout</span>
                 </button>
             </div>
         </div>
@@ -132,13 +70,13 @@
         <div id="sidebar" class="sidebar fixed md:static inset-y-0 left-0 z-50 w-64 bg-gray-800 text-white md:block h-screen overflow-y-auto">
             <nav class="p-4 space-y-2 mt-16 md:mt-4">
                 <button onclick="showSection('kanban')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition active">
-                    <i class="fas fa-columns mr-3"></i><span data-translate="Appointments Board">Appointments Board</span>
+                    <i class="fas fa-columns mr-3"></i><span>Appointments Board</span>
                 </button>
                 <button onclick="showSection('calendar')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
-                    <i class="fas fa-calendar mr-3"></i><span data-translate="Calendar View">Calendar View</span>
+                    <i class="fas fa-calendar mr-3"></i><span>Calendar View</span>
                 </button>
                 <button onclick="showSection('analytics')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
-                    <i class="fas fa-chart-bar mr-3"></i><span data-translate="Analytics">Analytics</span>
+                    <i class="fas fa-chart-bar mr-3"></i><span>Analytics</span>
                 </button>
             </nav>
         </div>
@@ -149,18 +87,18 @@
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
                     <h2 class="text-3xl font-bold text-gray-800 flex items-center">
                         <i class="fas fa-calendar-check text-primary mr-3"></i>
-                        <span data-translate="Appointments">Appointments</span>
+                        <span>Appointments</span>
                     </h2>
                     <div class="flex flex-col md:flex-row gap-3">
                         <div class="relative">
                             <i class="fas fa-user-md absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10"></i>
                             <select id="doctor-filter" onchange="loadKanban()" class="pl-10 pr-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white font-semibold text-gray-700 hover:border-primary transition w-full md:w-56">
-                                <option value="" data-translate="All Doctors">All Doctors</option>
+                                <option value="">All Doctors</option>
                             </select>
                         </div>
                         <div class="relative">
                             <i class="fas fa-calendar-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10"></i>
-                            <input type="text" id="kanban-date-filter" data-placeholder="Filter by date range (optional)" placeholder="Filter by date range (optional)" class="pl-10 pr-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white font-semibold text-gray-700 hover:border-primary transition cursor-pointer w-full md:w-80" readonly>
+                            <input type="text" id="kanban-date-filter" placeholder="Filter by date range (optional)" class="pl-10 pr-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white font-semibold text-gray-700 hover:border-primary transition cursor-pointer w-full md:w-80" readonly>
                         </div>
                     </div>
                 </div>
@@ -168,7 +106,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                     <div class="bg-blue-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-blue-800" data-translate="Booked">Booked</h3>
+                            <h3 class="font-bold text-blue-800">Booked</h3>
                             <span class="bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-booked">0</span>
                         </div>
                         <div id="kanban-booked" class="kanban-column space-y-2"></div>
@@ -176,7 +114,7 @@
                     
                     <div class="bg-purple-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-purple-800" data-translate="Approve">Approve</h3>
+                            <h3 class="font-bold text-purple-800">Approve</h3>
                             <span class="bg-purple-200 text-purple-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-approve">0</span>
                         </div>
                         <div id="kanban-approve" class="kanban-column space-y-2"></div>
@@ -184,7 +122,7 @@
                     
                     <div class="bg-green-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-green-800" data-translate="Appointment">Appointment</h3>
+                            <h3 class="font-bold text-green-800">Appointment</h3>
                             <span class="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-appointment">0</span>
                         </div>
                         <div id="kanban-appointment" class="kanban-column space-y-2"></div>
@@ -192,7 +130,7 @@
                     
                     <div class="bg-orange-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-orange-800" data-translate="Missed">Missed</h3>
+                            <h3 class="font-bold text-orange-800">Missed</h3>
                             <span class="bg-orange-200 text-orange-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-missed">0</span>
                         </div>
                         <div id="kanban-missed" class="kanban-column space-y-2"></div>
@@ -200,7 +138,7 @@
                     
                     <div class="bg-red-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-red-800" data-translate="Cancelled">Cancelled</h3>
+                            <h3 class="font-bold text-red-800">Cancelled</h3>
                             <span class="bg-red-200 text-red-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-cancelled">0</span>
                         </div>
                         <div id="kanban-cancelled" class="kanban-column space-y-2"></div>
@@ -208,7 +146,7 @@
                     
                     <div class="bg-gray-50 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-gray-800" data-translate="Completed">Completed</h3>
+                            <h3 class="font-bold text-gray-800">Completed</h3>
                             <span class="bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-xs font-semibold" id="count-completed">0</span>
                         </div>
                         <div id="kanban-completed" class="kanban-column space-y-2"></div>
@@ -221,12 +159,12 @@
                 <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
                     <h2 class="text-3xl font-bold text-gray-800 flex items-center">
                         <i class="fas fa-calendar text-primary mr-3"></i>
-                        <span data-translate="Calendar View">Calendar View</span>
+                        <span>Calendar View</span>
                     </h2>
                     <div class="relative">
                         <i class="fas fa-user-md absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10"></i>
                         <select id="calendar-doctor-filter" onchange="loadCalendar()" class="pl-10 pr-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white font-semibold text-gray-700 hover:border-primary transition w-full md:w-56">
-                            <option value="" data-translate="All Doctors">All Doctors</option>
+                            <option value="">All Doctors</option>
                         </select>
                     </div>
                 </div>
@@ -235,29 +173,29 @@
                     <!-- Calendar Navigation -->
                     <div class="flex items-center justify-between mb-6">
                         <button onclick="previousMonth()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition font-semibold text-gray-700">
-                            <i class="fas fa-chevron-left mr-2"></i><span data-translate="Previous">Previous</span>
+                            <i class="fas fa-chevron-left mr-2"></i><span>Previous</span>
                         </button>
                         <div class="text-center">
                             <h3 class="text-2xl font-bold text-gray-800" id="calendar-month-year"></h3>
                             <button onclick="goToToday()" class="text-sm text-primary hover:underline mt-1">
-                                <i class="fas fa-calendar-day mr-1"></i><span data-translate="Today">Today</span>
+                                <i class="fas fa-calendar-day mr-1"></i><span>Today</span>
                             </button>
                         </div>
                         <button onclick="nextMonth()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition font-semibold text-gray-700">
-                            <span data-translate="Next">Next</span><i class="fas fa-chevron-right ml-2"></i>
+                            <span>Next</span><i class="fas fa-chevron-right ml-2"></i>
                         </button>
                     </div>
                     
                     <!-- Calendar Grid -->
                     <div class="grid grid-cols-7 gap-2">
                         <!-- Day Headers -->
-                        <div class="text-center font-bold text-gray-600 py-2" data-translate="Sun">Sun</div>
-                        <div class="text-center font-bold text-gray-600 py-2" data-translate="Mon">Mon</div>
-                        <div class="text-center font-bold text-gray-600 py-2" data-translate="Tue">Tue</div>
-                        <div class="text-center font-bold text-gray-600 py-2" data-translate="Wed">Wed</div>
-                        <div class="text-center font-bold text-gray-600 py-2" data-translate="Thu">Thu</div>
-                        <div class="text-center font-bold text-gray-600 py-2" data-translate="Fri">Fri</div>
-                        <div class="text-center font-bold text-gray-600 py-2" data-translate="Sat">Sat</div>
+                        <div class="text-center font-bold text-gray-600 py-2">Sun</div>
+                        <div class="text-center font-bold text-gray-600 py-2">Mon</div>
+                        <div class="text-center font-bold text-gray-600 py-2">Tue</div>
+                        <div class="text-center font-bold text-gray-600 py-2">Wed</div>
+                        <div class="text-center font-bold text-gray-600 py-2">Thu</div>
+                        <div class="text-center font-bold text-gray-600 py-2">Fri</div>
+                        <div class="text-center font-bold text-gray-600 py-2">Sat</div>
                     </div>
                     
                     <!-- Calendar Days -->
@@ -282,7 +220,7 @@
             <div id="section-analytics" class="section hidden">
                 <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
                     <i class="fas fa-chart-bar text-primary mr-3"></i>
-                    <span data-translate="Analytics & Reports">Analytics & Reports</span>
+                    <span>Analytics & Reports</span>
                 </h2>
                 
                 <!-- Date Range & Doctor Filter -->
@@ -291,35 +229,35 @@
                         <!-- Doctor Filter -->
                         <div class="md:col-span-3">
                             <label class="block text-gray-700 font-semibold mb-2 text-sm">
-                                <i class="fas fa-user-md text-primary mr-2"></i><span data-translate="Filter by Doctor">Filter by Doctor</span>
+                                <i class="fas fa-user-md text-primary mr-2"></i><span>Filter by Doctor</span>
                             </label>
                             <select id="analytics-doctor-filter" onchange="loadAnalytics()" class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white font-semibold text-gray-700 hover:border-primary transition">
-                                <option value="" data-translate="All Doctors">All Doctors</option>
+                                <option value="">All Doctors</option>
                             </select>
                         </div>
                         
                         <!-- Date Range Picker -->
                         <div class="md:col-span-4">
                             <label class="block text-gray-700 font-semibold mb-2 text-sm">
-                                <i class="fas fa-calendar-alt text-primary mr-2"></i><span data-translate="Select Date Range">Select Date Range</span>
+                                <i class="fas fa-calendar-alt text-primary mr-2"></i><span>Select Date Range</span>
                             </label>
-                            <input type="text" id="analytics-date-range" data-placeholder="Click to select date range" placeholder="Click to select date range" class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition cursor-pointer" readonly>
+                            <input type="text" id="analytics-date-range" placeholder="Click to select date range" class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition cursor-pointer" readonly>
                         </div>
                         
                         <!-- Quick Range Buttons -->
                         <div class="md:col-span-3 flex space-x-2">
                             <button onclick="setQuickRange('week')" class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2.5 rounded-lg hover:from-blue-600 hover:to-blue-700 transition font-semibold text-sm shadow-md">
-                                <i class="fas fa-calendar-week mr-1"></i><span data-translate="7 Days">7 Days</span>
+                                <i class="fas fa-calendar-week mr-1"></i><span>7 Days</span>
                             </button>
                             <button onclick="setQuickRange('month')" class="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2.5 rounded-lg hover:from-purple-600 hover:to-purple-700 transition font-semibold text-sm shadow-md">
-                                <i class="fas fa-calendar-alt mr-1"></i><span data-translate="30 Days">30 Days</span>
+                                <i class="fas fa-calendar-alt mr-1"></i><span>30 Days</span>
                             </button>
                         </div>
                         
                         <!-- Export Button -->
                         <div class="md:col-span-2">
                             <button onclick="exportAnalyticsToCSV()" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2.5 rounded-lg hover:from-green-600 hover:to-green-700 transition font-semibold shadow-md">
-                                <i class="fas fa-download mr-2"></i><span data-translate="Export">Export</span>
+                                <i class="fas fa-download mr-2"></i><span>Export</span>
                             </button>
                         </div>
                     </div>
@@ -330,7 +268,7 @@
                     <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-blue-100 text-sm font-medium" data-translate="Total Appointments">Total Appointments</p>
+                                <p class="text-blue-100 text-sm font-medium">Total Appointments</p>
                                 <p id="analytics-total" class="text-4xl font-bold mt-2">0</p>
                             </div>
                             <i class="fas fa-calendar-check text-blue-200 text-4xl opacity-50"></i>
@@ -339,7 +277,7 @@
                     <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-green-100 text-sm font-medium" data-translate="Completed">Completed</p>
+                                <p class="text-green-100 text-sm font-medium">Completed</p>
                                 <p id="analytics-completed" class="text-4xl font-bold mt-2">0</p>
                                 <p id="analytics-completed-rate" class="text-green-100 text-xs mt-1">0%</p>
                             </div>
@@ -349,7 +287,7 @@
                     <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-orange-100 text-sm font-medium" data-translate="Missed">Missed</p>
+                                <p class="text-orange-100 text-sm font-medium">Missed</p>
                                 <p id="analytics-missed" class="text-4xl font-bold mt-2">0</p>
                                 <p id="analytics-missed-rate" class="text-orange-100 text-xs mt-1">0%</p>
                             </div>
@@ -359,7 +297,7 @@
                     <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-purple-100 text-sm font-medium" data-translate="Avg per Day">Avg per Day</p>
+                                <p class="text-purple-100 text-sm font-medium">Avg per Day</p>
                                 <p id="analytics-avg-day" class="text-4xl font-bold mt-2">0</p>
                             </div>
                             <i class="fas fa-chart-line text-purple-200 text-4xl opacity-50"></i>
@@ -371,14 +309,14 @@
                 <div class="grid md:grid-cols-2 gap-6 mb-6">
                     <div class="bg-white rounded-xl shadow-lg p-6">
                         <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                            <i class="fas fa-chart-pie text-primary mr-2"></i><span data-translate="Status Breakdown">Status Breakdown</span>
+                            <i class="fas fa-chart-pie text-primary mr-2"></i><span>Status Breakdown</span>
                         </h3>
                         <div class="space-y-3" id="status-breakdown"></div>
                     </div>
                     
                     <div class="bg-white rounded-xl shadow-lg p-6">
                         <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                            <i class="fas fa-user-md text-primary mr-2"></i><span data-translate="Doctor Performance">Doctor Performance</span>
+                            <i class="fas fa-user-md text-primary mr-2"></i><span>Doctor Performance</span>
                         </h3>
                         <div class="space-y-3" id="doctor-performance"></div>
                     </div>
@@ -395,14 +333,14 @@
                         <table class="w-full">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase" data-translate="Doctor">Doctor</th>
-                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase" data-translate="Total">Total</th>
-                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase" data-translate="Booked">Booked</th>
-                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase" data-translate="Appointment">Appointment</th>
-                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase" data-translate="Completed">Completed</th>
-                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase" data-translate="Missed">Missed</th>
-                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase" data-translate="Cancelled">Cancelled</th>
-                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase" data-translate="Completion Rate">Completion Rate</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Doctor</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase">Total</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase">Booked</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase">Appointment</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase">Completed</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase">Missed</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase">Cancelled</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase">Completion Rate</th>
                                 </tr>
                             </thead>
                             <tbody id="analytics-table-body" class="divide-y divide-gray-200"></tbody>
@@ -1770,321 +1708,3 @@
             const hour12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
             return `${hour12}:${minutes.toString().padStart(2, '0')} ${period}`;
         }
-        
-        // ==================== TRANSLATION SYSTEM ====================
-        
-        const translations = {
-            en: {
-                // Navigation
-                "Clinic Management": "Clinic Management",
-                "Staff Portal": "Staff Portal",
-                "Appointments Board": "Appointments Board",
-                "Calendar View": "Calendar View",
-                "Analytics": "Analytics",
-                "Logout": "Logout",
-                
-                // Kanban Section
-                "Appointments": "Appointments",
-                "All Doctors": "All Doctors",
-                "Filter by date range (optional)": "Filter by date range (optional)",
-                "Booked": "Booked",
-                "Approve": "Approve",
-                "Appointment": "Appointment",
-                "Missed": "Missed",
-                "Cancelled": "Cancelled",
-                "Completed": "Completed",
-                "View": "View",
-                "Transfer": "Transfer",
-                
-                // Calendar
-                "Previous": "Previous",
-                "Next": "Next",
-                "Today": "Today",
-                "Sun": "Sun",
-                "Mon": "Mon",
-                "Tue": "Tue",
-                "Wed": "Wed",
-                "Thu": "Thu",
-                "Fri": "Fri",
-                "Sat": "Sat",
-                "Sunday": "Sunday",
-                "Monday": "Monday",
-                "Tuesday": "Tuesday",
-                "Wednesday": "Wednesday",
-                "Thursday": "Thursday",
-                "Friday": "Friday",
-                "Saturday": "Saturday",
-                "January": "January",
-                "February": "February",
-                "March": "March",
-                "April": "April",
-                "May": "May",
-                "June": "June",
-                "July": "July",
-                "August": "August",
-                "September": "September",
-                "October": "October",
-                "November": "November",
-                "December": "December",
-                
-                // Analytics
-                "Analytics & Reports": "Analytics & Reports",
-                "Filter by Doctor": "Filter by Doctor",
-                "Select Date Range": "Select Date Range",
-                "Click to select date range": "Click to select date range",
-                "7 Days": "7 Days",
-                "30 Days": "30 Days",
-                "Export": "Export",
-                "Total Appointments": "Total Appointments",
-                "Avg per Day": "Avg per Day",
-                "Status Breakdown": "Status Breakdown",
-                "Doctor Performance": "Doctor Performance",
-                "Doctor": "Doctor",
-                "Total": "Total",
-                "Completion Rate": "Completion Rate",
-                "Weekly Report": "Weekly Report",
-                "Monthly Report": "Monthly Report",
-                "Custom Report": "Custom Report",
-                
-                // Transfer Modal
-                "Transfer Doctor": "Transfer Doctor",
-                "Patient": "Patient",
-                "Date": "Date",
-                "Time": "Time",
-                "Current Doctor": "Current Doctor",
-                "Transfer to": "Transfer to",
-                "Select a doctor": "Select a doctor...",
-                "Reason (Optional)": "Reason (Optional)",
-                "e.g., Doctor unavailable, patient preference...": "e.g., Doctor unavailable, patient preference...",
-                "Cancel": "Cancel",
-                "Confirm Transfer": "Confirm Transfer",
-                
-                // Common
-                "Close": "Close",
-                "Save": "Save",
-                "Delete": "Delete",
-                "Edit": "Edit",
-                "Add": "Add",
-                "Search": "Search",
-                "Filter": "Filter",
-                "Clear": "Clear",
-                "Loading": "Loading...",
-                "No data available": "No data available",
-                "Success": "Success",
-                "Error": "Error",
-                "Warning": "Warning"
-            },
-            ar: {
-                // Navigation
-                "Clinic Management": "إدارة العيادة",
-                "Staff Portal": "بوابة الموظفين",
-                "Appointments Board": "لوحة المواعيد",
-                "Calendar View": "عرض التقويم",
-                "Analytics": "التحليلات",
-                "Logout": "تسجيل الخروج",
-                
-                // Kanban Section
-                "Appointments": "المواعيد",
-                "All Doctors": "جميع الأطباء",
-                "Filter by date range (optional)": "تصفية حسب نطاق التاريخ (اختياري)",
-                "Booked": "محجوز",
-                "Approve": "موافقة",
-                "Appointment": "موعد",
-                "Missed": "فائت",
-                "Cancelled": "ملغي",
-                "Completed": "مكتمل",
-                "View": "عرض",
-                "Transfer": "نقل",
-                
-                // Calendar
-                "Previous": "السابق",
-                "Next": "التالي",
-                "Today": "اليوم",
-                "Sun": "الأحد",
-                "Mon": "الإثنين",
-                "Tue": "الثلاثاء",
-                "Wed": "الأربعاء",
-                "Thu": "الخميس",
-                "Fri": "الجمعة",
-                "Sat": "السبت",
-                "Sunday": "الأحد",
-                "Monday": "الإثنين",
-                "Tuesday": "الثلاثاء",
-                "Wednesday": "الأربعاء",
-                "Thursday": "الخميس",
-                "Friday": "الجمعة",
-                "Saturday": "السبت",
-                "January": "يناير",
-                "February": "فبراير",
-                "March": "مارس",
-                "April": "أبريل",
-                "May": "مايو",
-                "June": "يونيو",
-                "July": "يوليو",
-                "August": "أغسطس",
-                "September": "سبتمبر",
-                "October": "أكتوبر",
-                "November": "نوفمبر",
-                "December": "ديسمبر",
-                
-                // Analytics
-                "Analytics & Reports": "التحليلات والتقارير",
-                "Filter by Doctor": "تصفية حسب الطبيب",
-                "Select Date Range": "اختر نطاق التاريخ",
-                "Click to select date range": "انقر لاختيار نطاق التاريخ",
-                "7 Days": "7 أيام",
-                "30 Days": "30 يوم",
-                "Export": "تصدير",
-                "Total Appointments": "إجمالي المواعيد",
-                "Avg per Day": "المتوسط يوميًا",
-                "Status Breakdown": "تفصيل الحالة",
-                "Doctor Performance": "أداء الأطباء",
-                "Doctor": "الطبيب",
-                "Total": "الإجمالي",
-                "Completion Rate": "معدل الإنجاز",
-                "Weekly Report": "تقرير أسبوعي",
-                "Monthly Report": "تقرير شهري",
-                "Custom Report": "تقرير مخصص",
-                
-                // Transfer Modal
-                "Transfer Doctor": "نقل الطبيب",
-                "Patient": "المريض",
-                "Date": "التاريخ",
-                "Time": "الوقت",
-                "Current Doctor": "الطبيب الحالي",
-                "Transfer to": "النقل إلى",
-                "Select a doctor": "اختر طبيبًا...",
-                "Reason (Optional)": "السبب (اختياري)",
-                "e.g., Doctor unavailable, patient preference...": "مثال: الطبيب غير متاح، تفضيل المريض...",
-                "Cancel": "إلغاء",
-                "Confirm Transfer": "تأكيد النقل",
-                
-                // Common
-                "Close": "إغلاق",
-                "Save": "حفظ",
-                "Delete": "حذف",
-                "Edit": "تعديل",
-                "Add": "إضافة",
-                "Search": "بحث",
-                "Filter": "تصفية",
-                "Clear": "مسح",
-                "Loading": "جاري التحميل...",
-                "No data available": "لا توجد بيانات متاحة",
-                "Success": "نجح",
-                "Error": "خطأ",
-                "Warning": "تحذير"
-            }
-        };
-        
-        let currentLanguage = 'en';
-        
-        // Switch language function
-        function switchLanguage(lang) {
-            currentLanguage = lang;
-            
-            // Update HTML attributes
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            
-            // Update toggle buttons
-            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
-            
-            // Translate all elements with data-translate attribute
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (translations[lang][key]) {
-                    element.textContent = translations[lang][key];
-                }
-            });
-            
-            // Translate all placeholders with data-placeholder attribute
-            document.querySelectorAll('[data-placeholder]').forEach(element => {
-                const key = element.getAttribute('data-placeholder');
-                if (translations[lang][key]) {
-                    element.placeholder = translations[lang][key];
-                }
-            });
-            
-            // Save language preference
-            localStorage.setItem('preferredLanguage', lang);
-            
-            // Reload dynamic content if needed
-            const activeSection = document.querySelector('.section:not(.hidden)');
-            if (activeSection) {
-                const sectionId = activeSection.id.replace('section-', '');
-                if (sectionId === 'kanban') loadKanban();
-                if (sectionId === 'calendar') loadCalendar();
-                if (sectionId === 'analytics') loadAnalytics();
-            }
-        }
-        
-        // Load saved language on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('preferredLanguage') || 'en';
-            if (savedLang === 'ar') {
-                switchLanguage('ar');
-            }
-        });
-    </script>
-    
-    <!-- Transfer Doctor Modal -->
-    <div id="transfer-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">
-                <i class="fas fa-exchange-alt text-blue-500 mr-2"></i><span data-translate="Transfer Doctor">Transfer Doctor</span>
-            </h2>
-            
-            <!-- Current Appointment Info -->
-            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded">
-                <p class="text-sm text-gray-700 mb-1">
-                    <strong data-translate="Patient">Patient</strong>: <span id="transfer-patient-name"></span>
-                </p>
-                <p class="text-sm text-gray-700 mb-1">
-                    <strong data-translate="Date">Date</strong>: <span id="transfer-date"></span>
-                </p>
-                <p class="text-sm text-gray-700 mb-1">
-                    <strong data-translate="Time">Time</strong>: <span id="transfer-time"></span>
-                </p>
-                <p class="text-sm text-gray-700">
-                    <strong data-translate="Current Doctor">Current Doctor</strong>: <span id="transfer-current-doctor"></span>
-                </p>
-            </div>
-            
-            <!-- New Doctor Selection -->
-            <div class="mb-4">
-                <label class="block text-gray-700 font-semibold mb-2">
-                    <i class="fas fa-user-md text-blue-500 mr-2"></i><span data-translate="Transfer to">Transfer to</span>:
-                </label>
-                <select id="transfer-new-doctor" required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    <option value="" data-translate="Select a doctor">Select a doctor...</option>
-                </select>
-            </div>
-            
-            <!-- Reason (Optional) -->
-            <div class="mb-4">
-                <label class="block text-gray-700 font-semibold mb-2">
-                    <i class="fas fa-comment text-blue-500 mr-2"></i><span data-translate="Reason (Optional)">Reason (Optional)</span>:
-                </label>
-                <textarea id="transfer-reason" rows="3" 
-                          data-placeholder="e.g., Doctor unavailable, patient preference..."
-                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                          placeholder="e.g., Doctor unavailable, patient preference..."></textarea>
-            </div>
-            
-            <!-- Action Buttons -->
-            <div class="flex space-x-3">
-                <button onclick="closeTransferModal()" 
-                        class="flex-1 bg-gray-200 text-gray-700 px-4 py-3 rounded-lg font-semibold hover:bg-gray-300 transition">
-                    <span data-translate="Cancel">Cancel</span>
-                </button>
-                <button onclick="confirmTransferDoctor()" 
-                        class="flex-1 bg-blue-500 text-white px-4 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
-                    <i class="fas fa-check mr-2"></i><span data-translate="Confirm Transfer">Confirm Transfer</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
