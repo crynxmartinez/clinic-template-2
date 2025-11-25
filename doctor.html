@@ -427,6 +427,11 @@
         // Current user
         let currentUser = null;
         
+        // Simple translation function (returns text as-is for now)
+        function t(text) {
+            return text;
+        }
+        
         // Check if user is logged in
         function checkAuth() {
             const currentUserStr = localStorage.getItem('currentUser');
@@ -686,7 +691,7 @@
                 // CRITICAL: Filter by CLINIC_ID AND doctorId
                 let query = db.collection('appointments')
                     .where('clinicId', '==', CLINIC_ID)
-                    .where('doctorId', '==', currentUser.uid);
+                    .where('doctorId', '==', currentUser.id);
                 const snapshot = await query.get();
                 let appointments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
@@ -1560,7 +1565,7 @@
                 grid.innerHTML = `
                     <div class="col-span-full text-center py-12">
                         <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
-                        <p class="text-gray-500 text-lg">${t('No global services found')}</p>
+                        <p class="text-gray-500 text-lg">No global services found</p>
                     </div>
                 `;
                 return;
@@ -1580,7 +1585,7 @@
                             <div class="flex items-center justify-between">
                                 <i class="fas ${icon} text-4xl opacity-90"></i>
                                 <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-xs font-semibold">
-                                    <i class="fas fa-globe mr-1"></i>${t('Global')}
+                                    <i class="fas fa-globe mr-1"></i>Global
                                 </span>
                             </div>
                         </div>
