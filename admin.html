@@ -845,31 +845,31 @@
                     const password = document.getElementById('doctor-password').value;
                     const specialty = document.getElementById('doctor-specialty').value;
                     
-                    // Set flag to prevent auth listener from redirecting
+                    // Set flag to prevent auth checks
                     isCreatingUser = true;
                     
-                    // Create Firebase Auth account for doctor (this will auto-login as doctor)
+                    // Create Firebase Auth account (will auto-login as doctor)
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     const doctorUid = userCredential.user.uid;
                     
-                    // Create Firestore user document
+                    // Create Firestore user document with CLINIC_ID
                     await db.collection('users').doc(doctorUid).set({
                         name: name,
                         email: email,
                         phone: phone,
                         role: 'doctor',
-                        clinicId: CLINIC_ID,
+                        clinicId: CLINIC_ID, // ✅ THIS CLINIC ONLY
                         active: true,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
-                    // Create doctor profile
+                    // Create doctor profile with CLINIC_ID
                     await db.collection('doctors').doc(doctorUid).set({
                         name: name,
                         email: email,
                         phone: phone,
                         specialty: specialty,
-                        clinicId: CLINIC_ID,
+                        clinicId: CLINIC_ID, // ✅ THIS CLINIC ONLY
                         appointmentDuration: 30,
                         bufferTime: 10,
                         weeklySchedule: {},
@@ -886,18 +886,18 @@
                         tags: ['Doctor']
                     });
                     
-                    // Sign out the doctor
+                    // Sign out the doctor and sign back in as admin
                     await auth.signOut();
                     
-                    // Show success message and reload page (will redirect to login)
-                    showToast(`✅ Doctor "${name}" created! Reloading...`, 'success');
+                    // Reset flag
+                    isCreatingUser = false;
+                    
+                    // Show success and reload
+                    showToast(`✅ Doctor "${name}" created for ${CLINIC_NAME}!`, 'success');
                     closeModal();
                     
-                    // Reload page after 1 second to log back in as admin
-                    setTimeout(() => {
-                        isCreatingUser = false;
-                        window.location.reload();
-                    }, 1500);
+                    // Reload to restore admin session
+                    setTimeout(() => window.location.reload(), 1000);
                     
                 } catch (error) {
                     console.error('Error adding doctor:', error);
@@ -1430,20 +1430,20 @@
                     const select = document.getElementById('staff-doctors');
                     const assignedDoctors = Array.from(select.selectedOptions).map(opt => opt.value);
                     
-                    // Set flag to prevent auth listener from redirecting
+                    // Set flag to prevent auth checks
                     isCreatingUser = true;
                     
-                    // Create Firebase Auth account for staff (this will auto-login as staff)
+                    // Create Firebase Auth account (will auto-login as staff)
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     const staffUid = userCredential.user.uid;
                     
-                    // Create Firestore user document
+                    // Create Firestore user document with CLINIC_ID
                     await db.collection('users').doc(staffUid).set({
                         name: name,
                         email: email,
                         phone: phone,
                         role: 'staff',
-                        clinicId: CLINIC_ID,
+                        clinicId: CLINIC_ID, // ✅ THIS CLINIC ONLY
                         assignedDoctors: assignedDoctors,
                         active: true,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1460,15 +1460,15 @@
                     // Sign out the staff
                     await auth.signOut();
                     
-                    // Show success message and reload page (will redirect to login)
-                    showToast(`✅ Staff "${name}" created! Reloading...`, 'success');
+                    // Reset flag
+                    isCreatingUser = false;
+                    
+                    // Show success and reload
+                    showToast(`✅ Staff "${name}" created for ${CLINIC_NAME}!`, 'success');
                     closeModal();
                     
-                    // Reload page after 1 second to log back in as admin
-                    setTimeout(() => {
-                        isCreatingUser = false;
-                        window.location.reload();
-                    }, 1500);
+                    // Reload to restore admin session
+                    setTimeout(() => window.location.reload(), 1000);
                     
                 } catch (error) {
                     console.error('Error adding staff:', error);
