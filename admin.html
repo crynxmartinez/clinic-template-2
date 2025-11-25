@@ -178,6 +178,17 @@
                         </button>
                     </div>
                 </div>
+                
+                <!-- Search Bar -->
+                <div class="mb-6">
+                    <div class="relative">
+                        <input type="text" id="doctor-search" placeholder="Search doctors by name, email, or specialty..." 
+                            class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                            oninput="filterDoctors()">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                
                 <div id="doctors-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
             
@@ -189,6 +200,17 @@
                         <i class="fas fa-plus mr-2"></i><span>Add Staff</span>
                     </button>
                 </div>
+                
+                <!-- Search Bar -->
+                <div class="mb-6">
+                    <div class="relative">
+                        <input type="text" id="staff-search" placeholder="Search staff by name, email, or position..." 
+                            class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                            oninput="filterStaff()">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                
                 <div id="staff-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
             
@@ -211,6 +233,17 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Search Bar -->
+                <div class="mb-6">
+                    <div class="relative">
+                        <input type="text" id="globalservice-search" placeholder="Search services by name or description..." 
+                            class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                            oninput="filterGlobalServices()">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                
                 <div id="global-services-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
             
@@ -591,6 +624,7 @@
         let allDoctors = [];
         let allStaff = [];
         let allAppointments = [];
+        let allGlobalServices = [];
         let currentStaffAssignedDoctors = [];
         let currentCalendarDate = new Date();
         let calendarAppointments = [];
@@ -797,6 +831,87 @@
                 console.error('Error loading doctors:', error);
                 showToast('Error loading doctors', 'error');
             }
+        }
+        
+        function filterDoctors() {
+            const searchTerm = document.getElementById('doctor-search').value.toLowerCase().trim();
+            const grid = document.getElementById('doctors-grid');
+            
+            const filteredDoctors = allDoctors.filter(doctor => {
+                const name = (doctor.name || '').toLowerCase();
+                const email = (doctor.email || '').toLowerCase();
+                const specialty = (doctor.specialty || '').toLowerCase();
+                
+                return name.includes(searchTerm) || 
+                       email.includes(searchTerm) || 
+                       specialty.includes(searchTerm);
+            });
+            
+            if (filteredDoctors.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-search text-gray-300 text-6xl mb-4"></i>
+                        <p class="text-gray-500 text-lg">No doctors found matching "${searchTerm}"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = filteredDoctors.map(doctor => {
+                const isActive = doctor.active !== false;
+                const clinics = doctor.clinicIds || (doctor.clinicId ? [doctor.clinicId] : []);
+                const isMultiClinic = clinics.length > 1;
+                
+                return `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 border border-gray-100" onclick="showDoctorDetailsModal('${doctor.id}')">
+                    <!-- Status Badge -->
+                    <div class="${isActive ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gradient-to-r from-red-500 to-red-600'} px-4 py-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-white text-xs font-semibold uppercase tracking-wide">
+                                <i class="fas ${isActive ? 'fa-check-circle' : 'fa-times-circle'} mr-1"></i>
+                                ${isActive ? 'Active' : 'Inactive'}
+                            </span>
+                            ${isMultiClinic ? '<span class="bg-white text-blue-600 text-xs font-bold px-2 py-1 rounded"><i class="fas fa-hospital mr-1"></i>Multi-Clinic</span>' : '<span class="text-white text-xs opacity-75">Doctor</span>'}
+                        </div>
+                    </div>
+                    
+                    <!-- Card Content -->
+                    <div class="p-6">
+                        <div class="flex items-start space-x-4 mb-4">
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl flex items-center justify-center text-2xl shadow-lg flex-shrink-0">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-xl font-bold text-gray-800 mb-1 truncate">${doctor.name}</h3>
+                                <p class="text-sm text-gray-600 truncate">
+                                    <i class="fas fa-envelope text-gray-400 mr-1"></i>${doctor.email}
+                                </p>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    <i class="fas fa-phone text-gray-400 mr-1"></i>${doctor.phone || 'N/A'}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Doctor UID -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xs text-blue-600 font-semibold mb-1">Doctor UID</p>
+                                    <code class="text-xs text-gray-700 font-mono block truncate">${doctor.id}</code>
+                                </div>
+                                <button onclick="event.stopPropagation(); copyDoctorUID('${doctor.id}')" class="ml-2 bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 transition text-xs">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button onclick="event.stopPropagation(); deleteDoctor('${doctor.id}')" class="w-full bg-red-500 text-white px-4 py-2.5 rounded-lg hover:bg-red-600 transition font-semibold shadow-md hover:shadow-lg">
+                            <i class="fas fa-trash mr-2"></i> ${isMultiClinic ? 'Remove from Clinic' : 'Delete Doctor'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            }).join('');
         }
         
         function showAddDoctorModal() {
@@ -1905,6 +2020,91 @@
             }
         }
         
+        function filterStaff() {
+            const searchTerm = document.getElementById('staff-search').value.toLowerCase().trim();
+            const grid = document.getElementById('staff-grid');
+            
+            const filteredStaff = allStaff.filter(staff => {
+                const name = (staff.name || '').toLowerCase();
+                const email = (staff.email || '').toLowerCase();
+                const position = (staff.position || '').toLowerCase();
+                
+                return name.includes(searchTerm) || 
+                       email.includes(searchTerm) || 
+                       position.includes(searchTerm);
+            });
+            
+            if (filteredStaff.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-search text-gray-300 text-6xl mb-4"></i>
+                        <p class="text-gray-500 text-lg">No staff found matching "${searchTerm}"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = filteredStaff.map(staff => {
+                const assignedDoctorNames = (staff.assignedDoctors || [])
+                    .map(id => allDoctors.find(d => d.id === id)?.name || 'Unknown')
+                    .join(', ');
+                const isActive = staff.active !== false;
+                const assignedCount = (staff.assignedDoctors || []).length;
+                
+                return `
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 border border-gray-100" onclick="showStaffDetailsModal('${staff.id}')">
+                        <!-- Status Badge -->
+                        <div class="${isActive ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gradient-to-r from-red-500 to-red-600'} px-4 py-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white text-xs font-semibold uppercase tracking-wide">
+                                    <i class="fas ${isActive ? 'fa-check-circle' : 'fa-times-circle'} mr-1"></i>
+                                    ${isActive ? 'Active' : 'Inactive'}
+                                </span>
+                                <span class="text-white text-xs opacity-75">Staff</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Content -->
+                        <div class="p-6">
+                            <div class="flex items-start space-x-4 mb-4">
+                                <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl flex items-center justify-center text-2xl shadow-lg flex-shrink-0">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-1 truncate">${staff.name}</h3>
+                                    <p class="text-sm text-gray-600 truncate">
+                                        <i class="fas fa-envelope text-gray-400 mr-1"></i>${staff.email}
+                                    </p>
+                                    <p class="text-sm text-gray-600 mt-1">
+                                        <i class="fas fa-phone text-gray-400 mr-1"></i>${staff.phone || 'N/A'}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- Assigned Doctors Info -->
+                            <div class="bg-green-50 border border-green-200 rounded-lg px-3 py-2 mb-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs text-gray-600 font-medium">
+                                        <i class="fas fa-user-md text-green-600 mr-1"></i>Assigned Doctors
+                                    </span>
+                                    <span class="text-xs font-bold text-green-700 bg-green-200 px-2 py-0.5 rounded-full">
+                                        ${assignedCount}
+                                    </span>
+                                </div>
+                                ${assignedCount > 0 ? `
+                                    <p class="text-xs text-gray-600 mt-1 truncate">${assignedDoctorNames}</p>
+                                ` : '<p class="text-xs text-gray-500 mt-1">No doctors assigned</p>'}
+                            </div>
+                            
+                            <button onclick="event.stopPropagation(); deleteStaff('${staff.id}')" class="w-full bg-red-500 text-white px-4 py-2.5 rounded-lg hover:bg-red-600 transition font-semibold shadow-md hover:shadow-lg">
+                                <i class="fas fa-trash mr-2"></i> Delete Staff
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
         function showAddStaffModal() {
             const modal = document.createElement('div');
             modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
@@ -2503,9 +2703,10 @@
         async function loadGlobalServices() {
             try {
                 const snapshot = await db.collection('globalServices').get();
-                const services = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                allGlobalServices = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
                 const grid = document.getElementById('global-services-grid');
+                const services = allGlobalServices;
                 if (services.length === 0) {
                     grid.innerHTML = `
                         <div class="col-span-full text-center py-12">
@@ -2569,6 +2770,81 @@
                 console.error('Error loading global services:', error);
                 showToast('Error loading global services', 'error');
             }
+        }
+        
+        function filterGlobalServices() {
+            const searchTerm = document.getElementById('globalservice-search').value.toLowerCase().trim();
+            const grid = document.getElementById('global-services-grid');
+            
+            const filteredServices = allGlobalServices.filter(service => {
+                const name = (service.name || '').toLowerCase();
+                const description = (service.description || '').toLowerCase();
+                const category = (service.category || '').toLowerCase();
+                
+                return name.includes(searchTerm) || 
+                       description.includes(searchTerm) || 
+                       category.includes(searchTerm);
+            });
+            
+            if (filteredServices.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-search text-gray-300 text-6xl mb-4"></i>
+                        <p class="text-gray-500 text-lg">No services found matching "${searchTerm}"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = filteredServices.map(service => {
+                const icon = getCategoryIcon(service.category);
+                const gradient = getCategoryGradient(service.category);
+                const description = truncateText(service.description, 80);
+                const price = formatPrice(service.price, service.currency);
+                const isActive = service.isActive !== false;
+                const translatedCategory = t(service.category);
+                
+                return `
+                    <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-105" onclick="viewGlobalServiceDetails('${service.id}')">
+                        <!-- Header with gradient -->
+                        <div class="bg-gradient-to-r ${gradient} p-4 text-white relative">
+                            <div class="flex items-center justify-between">
+                                <i class="fas ${icon} text-4xl opacity-90"></i>
+                                <div class="flex space-x-2">
+                                    <button onclick="event.stopPropagation(); showEditGlobalServiceModal('${service.id}')" class="bg-white bg-opacity-20 hover:bg-opacity-30 p-2 rounded-lg transition" title="${t('Edit')}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="event.stopPropagation(); deleteGlobalService('${service.id}')" class="bg-white bg-opacity-20 hover:bg-opacity-30 p-2 rounded-lg transition" title="${t('Delete')}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">${service.name}</h3>
+                            <div class="flex items-center text-sm text-gray-600 mb-3 space-x-3">
+                                <span><i class="fas fa-folder mr-1"></i>${translatedCategory}</span>
+                                <span><i class="fas fa-clock mr-1"></i>${service.duration} ${t('minutes')}</span>
+                                <span class="font-semibold text-primary">${price}</span>
+                            </div>
+                            
+                            ${description ? `<p class="text-gray-600 text-sm mb-4 line-clamp-2">${description}</p>` : `<p class="text-gray-400 text-sm mb-4 italic">${t('No description')}</p>`}
+                            
+                            <div class="flex items-center justify-between pt-4 border-t">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                                    <i class="fas fa-circle text-xs mr-1"></i>
+                                    ${isActive ? t('Active') : t('Inactive')}
+                                </span>
+                                <span class="text-primary text-sm font-semibold">
+                                    ${t('View Details')} <i class="fas fa-arrow-right ml-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
         
         function showAddGlobalServiceModal() {
@@ -2653,9 +2929,31 @@
             
             document.getElementById('global-service-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Checking...';
+                
                 try {
+                    const serviceName = document.getElementById('gs-name').value.trim();
+                    
+                    // Check for duplicate service name
+                    const duplicateCheck = await db.collection('globalServices')
+                        .where('name', '==', serviceName)
+                        .get();
+                    
+                    if (!duplicateCheck.empty) {
+                        showToast('⚠️ Duplicate service already exists with this name!', 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+                        return;
+                    }
+                    
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+                    
                     const serviceData = {
-                        name: document.getElementById('gs-name').value,
+                        name: serviceName,
                         category: document.getElementById('gs-category').value,
                         duration: parseInt(document.getElementById('gs-duration').value),
                         price: parseFloat(document.getElementById('gs-price').value) || 0,
@@ -2668,7 +2966,7 @@
                     };
                     
                     await db.collection('globalServices').add(serviceData);
-                    showToast('Global service added successfully', 'success');
+                    showToast('✅ Global service added successfully!', 'success');
                     closeModal();
                     loadGlobalServices();
                 } catch (error) {
