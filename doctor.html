@@ -1069,7 +1069,7 @@
         
         async function loadServices() {
             try {
-                const snapshot = await db.collection('services').where('doctorId', '==', currentUser.id).get();
+                const snapshot = await db.collection('services').where('userId', '==', currentUser.id).get();
                 const services = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
                 const grid = document.getElementById('services-grid');
@@ -1239,7 +1239,7 @@
                 
                 try {
                     const serviceData = {
-                        doctorId: currentUser.id,
+                        userId: currentUser.id,
                         name: document.getElementById('service-name').value,
                         category: document.getElementById('service-category').value,
                         duration: parseInt(document.getElementById('service-duration').value),
@@ -1732,7 +1732,7 @@
                     
                     try {
                         const serviceData = {
-                            doctorId: currentUser.id,
+                            userId: currentUser.id,
                             name: globalService.name,
                             category: globalService.category,
                             duration: parseInt(document.getElementById('my-duration').value),

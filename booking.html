@@ -662,21 +662,21 @@
         }
         
         // Load services for selected doctor
-        async function loadDoctorServices(doctorId) {
+        async function loadDoctorServices(userId) {
             try {
-                console.log('🔍 Loading services for doctor:', doctorId);
+                console.log('🔍 Loading services for user:', userId);
                 
                 // Debug: Check all services in database
                 const allServicesSnap = await db.collection('services').get();
                 console.log('📊 Total services in database:', allServicesSnap.size);
                 allServicesSnap.forEach(doc => {
                     const data = doc.data();
-                    console.log(`   Service: ${data.name}, doctorId: ${data.doctorId}, active: ${data.isActive || data.active}`);
+                    console.log(`   Service: ${data.name}, userId: ${data.userId}, active: ${data.isActive || data.active}`);
                 });
                 
                 const snapshot = await db.collection('services')
-                    .where('doctorId', '==', doctorId)
-                    .where('active', '==', true)
+                    .where('userId', '==', userId)
+                    .where('isActive', '==', true)
                     .get();
                 
                 allServices = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -835,7 +835,8 @@
                 const bookingRef = generateBookingReference();
                 
                 const appointmentData = {
-                    doctorId: selectedDoctor.id,
+                    userId: selectedDoctor.id,
+                    doctorId: selectedDoctor.id,  // Keep for backward compatibility
                     doctorName: selectedDoctor.name,
                     clinicId: CLINIC_ID,  // ← ALWAYS use configured CLINIC_ID
                     patientName: document.getElementById('patient-name').value,
