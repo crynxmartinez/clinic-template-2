@@ -607,6 +607,11 @@
         // Logout function is already defined above (line 539-544)
         // protectPage() removed - using Firebase auth instead
         
+        // Simple translation helper - just returns the text as-is (no translation)
+        function t(text) {
+            return text;
+        }
+        
         function showToast(message, type = 'success') {
             const colors = { success: 'bg-green-500', error: 'bg-red-500', warning: 'bg-yellow-500', info: 'bg-blue-500' };
             const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
