@@ -480,6 +480,10 @@
         // CRITICAL: Authentication and Clinic Access Check
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
+                // Don't redirect if we're in the middle of creating a user
+                if (isCreatingUser) {
+                    return;
+                }
                 window.location.href = 'login.html';
                 return;
             }
@@ -603,6 +607,7 @@
         let currentStaffAssignedDoctors = [];
         let currentCalendarDate = new Date();
         let calendarAppointments = [];
+        let isCreatingUser = false; // Flag to prevent redirect during user creation
         
         // Logout function is already defined above (line 539-544)
         // protectPage() removed - using Firebase auth instead
@@ -835,21 +840,14 @@
                     const password = document.getElementById('doctor-password').value;
                     const specialty = document.getElementById('doctor-specialty').value;
                     
-                    // Store admin credentials temporarily
-                    const adminEmail = auth.currentUser.email;
+                    // Set flag to prevent auth listener from redirecting
+                    isCreatingUser = true;
                     
-                    // Create Firebase Auth account for doctor
+                    // Create Firebase Auth account for doctor (this will auto-login as doctor)
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     const doctorUid = userCredential.user.uid;
                     
-                    // Immediately sign out the new doctor and sign back in as admin
-                    await auth.signOut();
-                    
-                    // Show re-login modal
-                    const adminPassword = await showReLoginModal(adminEmail);
-                    await auth.signInWithEmailAndPassword(adminEmail, adminPassword);
-                    
-                    // Now create Firestore documents
+                    // Create Firestore user document
                     await db.collection('users').doc(doctorUid).set({
                         name: name,
                         email: email,
@@ -883,14 +881,25 @@
                         tags: ['Doctor']
                     });
                     
-                    showToast(`✅ Doctor "${name}" created! They can login with: ${email}`, 'success');
+                    // Sign out the doctor
+                    await auth.signOut();
+                    
+                    // Show success message and reload page (will redirect to login)
+                    showToast(`✅ Doctor "${name}" created! Reloading...`, 'success');
                     closeModal();
-                    loadDoctors();
+                    
+                    // Reload page after 1 second to log back in as admin
+                    setTimeout(() => {
+                        isCreatingUser = false;
+                        window.location.reload();
+                    }, 1500);
+                    
                 } catch (error) {
                     console.error('Error adding doctor:', error);
                     showToast(error.message || 'Error adding doctor', 'error');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
+                    isCreatingUser = false;
                 }
             });
         }
@@ -1416,21 +1425,14 @@
                     const select = document.getElementById('staff-doctors');
                     const assignedDoctors = Array.from(select.selectedOptions).map(opt => opt.value);
                     
-                    // Store admin credentials temporarily
-                    const adminEmail = auth.currentUser.email;
+                    // Set flag to prevent auth listener from redirecting
+                    isCreatingUser = true;
                     
-                    // Create Firebase Auth account for staff
+                    // Create Firebase Auth account for staff (this will auto-login as staff)
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     const staffUid = userCredential.user.uid;
                     
-                    // Immediately sign out the new staff and sign back in as admin
-                    await auth.signOut();
-                    
-                    // Show re-login modal
-                    const adminPassword = await showReLoginModal(adminEmail);
-                    await auth.signInWithEmailAndPassword(adminEmail, adminPassword);
-                    
-                    // Now create Firestore document
+                    // Create Firestore user document
                     await db.collection('users').doc(staffUid).set({
                         name: name,
                         email: email,
@@ -1450,14 +1452,25 @@
                         tags: ['Staff']
                     });
                     
-                    showToast(`✅ Staff "${name}" created! They can login with: ${email}`, 'success');
+                    // Sign out the staff
+                    await auth.signOut();
+                    
+                    // Show success message and reload page (will redirect to login)
+                    showToast(`✅ Staff "${name}" created! Reloading...`, 'success');
                     closeModal();
-                    loadStaff();
+                    
+                    // Reload page after 1 second to log back in as admin
+                    setTimeout(() => {
+                        isCreatingUser = false;
+                        window.location.reload();
+                    }, 1500);
+                    
                 } catch (error) {
                     console.error('Error adding staff:', error);
                     showToast(error.message || 'Error adding staff', 'error');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
+                    isCreatingUser = false;
                 }
             });
         }
