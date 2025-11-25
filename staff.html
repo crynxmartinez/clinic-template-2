@@ -420,17 +420,6 @@
             }
         }
         
-        // Check on page load
-        checkAuth();
-        
-        // Logout function
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('currentUser');
-                window.location.href = 'login.html';
-            }
-        }
-        
         // GoHighLevel API v2 Configuration
         const GHL_API_KEY = 'pit-5b612d16-1609-43c6-a669-322e9197a9a9';
         const GHL_LOCATION_ID = 'xzA6eU8kOYmBuwFdr3CF';
@@ -504,30 +493,11 @@
         let currentTransferAppointmentId = null;
         let currentTransferAppointment = null;
         
-        function getCurrentUser() {
-            const userStr = localStorage.getItem('currentUser');
-            return userStr ? JSON.parse(userStr) : null;
-        }
-        
         function logout() {
-            localStorage.removeItem('currentUser');
-            sessionStorage.removeItem('adminLoggedIn');
-            sessionStorage.removeItem('adminUser');
-            window.location.href = 'login.html';
-        }
-        
-        function protectPage(allowedRoles = []) {
-            const user = getCurrentUser();
-            if (!user) {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
                 window.location.href = 'login.html';
-                return null;
             }
-            if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-                showToast('You do not have permission to access this page', 'error');
-                setTimeout(() => window.location.href = 'login.html', 1500);
-                return null;
-            }
-            return user;
         }
         
         function showToast(message, type = 'success') {
@@ -558,12 +528,6 @@
             if (section === 'kanban') loadKanban();
             if (section === 'calendar') loadCalendar();
             if (section === 'analytics') loadAnalytics();
-        }
-        
-        currentUser = protectPage(['staff']);
-        if (currentUser) {
-            document.getElementById('user-name').textContent = currentUser.name;
-            initializePage();
         }
         
         async function initializePage() {
@@ -1707,3 +1671,9 @@
             const hour12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
             return `${hour12}:${minutes.toString().padStart(2, '0')} ${period}`;
         }
+        
+        // Check on page load - MUST BE AT THE END after all functions are defined
+        checkAuth();
+    </script>
+</body>
+</html>
