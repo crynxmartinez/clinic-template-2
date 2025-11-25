@@ -187,29 +187,26 @@
             }, 3000);
         }
         
-        // Check if already logged in (but not during active login process)
+        // Check if already logged in via localStorage
         let isLoggingIn = false;
         
-        auth.onAuthStateChanged(async (user) => {
-            if (user && !isLoggingIn) {
-                try {
-                    const userDoc = await db.collection('users').doc(user.uid).get();
-                    if (userDoc.exists) {
-                        const userData = userDoc.data();
-                        
-                        // CRITICAL: Check if user belongs to THIS clinic
-                        if (userData.clinicId === CLINIC_ID) {
-                            redirectByRole(userData);
-                        } else {
-                            // User doesn't belong to this clinic, sign them out
-                            await auth.signOut();
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error checking user:', error);
+        // Check localStorage for existing session
+        const currentUserStr = localStorage.getItem('currentUser');
+        if (currentUserStr && !isLoggingIn) {
+            try {
+                const userData = JSON.parse(currentUserStr);
+                // Only redirect if user belongs to this clinic
+                if (userData.clinicId === CLINIC_ID) {
+                    redirectByRole(userData);
+                } else {
+                    // User doesn't belong to this clinic, clear session
+                    localStorage.removeItem('currentUser');
                 }
+            } catch (error) {
+                console.error('Session check error:', error);
+                localStorage.removeItem('currentUser');
             }
-        });
+        }
         
         // Redirect based on role
         function redirectByRole(userData) {
@@ -226,7 +223,7 @@
                 default:
                     console.error('Unknown role:', userData.role);
                     showToast('Invalid user role', 'error');
-                    auth.signOut();
+                    localStorage.removeItem('currentUser');
             }
         }
         
@@ -252,30 +249,42 @@
             isLoggingIn = true;
             
             try {
-                // Sign in with Firebase
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                const user = userCredential.user;
+                // Query database for user with matching email (DATABASE-ONLY AUTH)
+                const usersSnapshot = await db.collection('users')
+                    .where('email', '==', email.toLowerCase())
+                    .limit(1)
+                    .get();
                 
-                // Get user document
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                
-                if (!userDoc.exists) {
-                    throw new Error('User profile not found');
+                if (usersSnapshot.empty) {
+                    throw new Error('No account found with this email.');
                 }
                 
-                const userData = userDoc.data();
+                const userDoc = usersSnapshot.docs[0];
+                const userData = { id: userDoc.id, ...userDoc.data() };
+                
+                // Check password
+                if (userData.password !== password) {
+                    throw new Error('Incorrect password.');
+                }
                 
                 // CRITICAL: Check if user belongs to THIS clinic
                 if (userData.clinicId !== CLINIC_ID) {
-                    await auth.signOut();
                     throw new Error(`Access denied. You do not have access to ${CLINIC_NAME}. Please login to your assigned clinic.`);
                 }
                 
                 // Check if user is active
                 if (userData.active === false) {
-                    await auth.signOut();
                     throw new Error('Your account has been deactivated. Please contact your administrator.');
                 }
+                
+                // Store session in localStorage
+                localStorage.setItem('currentUser', JSON.stringify({
+                    id: userData.id,
+                    email: userData.email,
+                    name: userData.name,
+                    role: userData.role,
+                    clinicId: userData.clinicId
+                }));
                 
                 // Success
                 console.log('✅ Login successful:', userData.name, '(' + userData.role + ')');
@@ -290,7 +299,7 @@
                 isLoggingIn = false;
                 console.error('Login error:', error);
                 
-                let errorMsg = 'Login failed. Please try again.';
+                let errorMsg = error.message || 'Login failed. Please try again.';
                 
                 if (error.code === 'auth/user-not-found') {
                     errorMsg = 'No account found with this email.';

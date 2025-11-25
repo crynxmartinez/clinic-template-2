@@ -477,30 +477,22 @@
         // Set clinic name in header
         document.getElementById('clinic-header-name').textContent = CLINIC_NAME;
         
-        // CRITICAL: Authentication and Clinic Access Check (ONE-TIME CHECK like superadmin)
+        // CRITICAL: Authentication and Clinic Access Check (DATABASE-ONLY)
         async function checkAuth() {
-            const user = auth.currentUser;
+            const currentUserStr = localStorage.getItem('currentUser');
             
-            if (!user) {
+            if (!currentUserStr) {
                 window.location.href = 'login.html';
                 return;
             }
             
             try {
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                if (!userDoc.exists) {
-                    alert('User profile not found');
-                    await auth.signOut();
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                const userData = userDoc.data();
+                const userData = JSON.parse(currentUserStr);
                 
                 // CHECK: User belongs to THIS clinic
                 if (userData.clinicId !== CLINIC_ID) {
                     alert(`Access denied. You do not have access to ${CLINIC_NAME}`);
-                    await auth.signOut();
+                    localStorage.removeItem('currentUser');
                     window.location.href = 'login.html';
                     return;
                 }
@@ -508,20 +500,12 @@
                 // CHECK: User is admin
                 if (userData.role !== 'admin') {
                     alert('Access denied. Admin access required.');
-                    await auth.signOut();
+                    localStorage.removeItem('currentUser');
                     window.location.href = 'login.html';
                     return;
                 }
                 
-                // CHECK: User is active
-                if (userData.active === false) {
-                    alert('Your account has been deactivated');
-                    await auth.signOut();
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                currentUser = { uid: user.uid, ...userData };
+                currentUser = userData;
                 document.getElementById('user-name').textContent = userData.name || 'Admin';
                 
                 console.log('✅ Admin authenticated:', userData.name, '- Clinic:', CLINIC_NAME);
@@ -532,24 +516,18 @@
             } catch (error) {
                 console.error('Auth error:', error);
                 alert('Authentication error');
-                await auth.signOut();
+                localStorage.removeItem('currentUser');
                 window.location.href = 'login.html';
             }
         }
         
-        // Wait for Firebase Auth to initialize, then check once
-        let authChecked = false;
-        auth.onAuthStateChanged((user) => {
-            if (!authChecked) {
-                authChecked = true;
-                checkAuth();
-            }
-        });
+        // Check authentication on page load
+        checkAuth();
         
         // Logout function
-        async function logout() {
+        function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                await auth.signOut();
+                localStorage.removeItem('currentUser');
                 window.location.href = 'login.html';
             }
         }
