@@ -10,7 +10,6 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -65,68 +64,6 @@
             background: #f3f4f6;
         }
         .nav-btn.active { background-color: rgba(255, 255, 255, 0.1); }
-        
-        /* Arabic Font */
-        html[lang="ar"] {
-            font-family: 'Cairo', sans-serif;
-        }
-        
-        /* Language Toggle Styles */
-        .lang-btn {
-            font-weight: 600;
-            color: #6b7280;
-        }
-        .lang-btn.active {
-            background-color: #0066cc;
-            color: white;
-        }
-        
-        /* RTL Support */
-        html[dir="rtl"] {
-            direction: rtl;
-        }
-        html[dir="rtl"] .sidebar {
-            left: auto;
-            right: 0;
-        }
-        html[dir="rtl"] .mr-2 {
-            margin-right: 0;
-            margin-left: 0.5rem;
-        }
-        html[dir="rtl"] .mr-3 {
-            margin-right: 0;
-            margin-left: 0.75rem;
-        }
-        html[dir="rtl"] .ml-2 {
-            margin-left: 0;
-            margin-right: 0.5rem;
-        }
-        html[dir="rtl"] .ml-3 {
-            margin-left: 0;
-            margin-right: 0.75rem;
-        }
-        html[dir="rtl"] .space-x-4 > * + * {
-            margin-left: 0;
-            margin-right: 1rem;
-        }
-        html[dir="rtl"] .space-x-3 > * + * {
-            margin-left: 0;
-            margin-right: 0.75rem;
-        }
-        html[dir="rtl"] .space-x-2 > * + * {
-            margin-left: 0;
-            margin-right: 0.5rem;
-        }
-        html[dir="rtl"] .text-left {
-            text-align: right;
-        }
-        html[dir="rtl"] .text-right {
-            text-align: left;
-        }
-        @media (max-width: 768px) {
-            html[dir="rtl"] .sidebar { transform: translateX(100%); }
-            html[dir="rtl"] .sidebar.active { transform: translateX(0); }
-        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -138,53 +75,42 @@
                     <i class="fas fa-tooth text-primary text-2xl"></i>
                     <div>
                         <h1 id="clinic-header-name" class="text-xl font-bold text-gray-800">Loading...</h1>
-                        <p class="text-xs text-gray-600" data-translate="Admin Portal">Admin Portal</p>
+                        <p class="text-xs text-gray-600">Admin Portal</p>
                     </div>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
-                <span class="text-gray-700 font-semibold hidden md:inline" id="user-name" data-translate="Administrator">Administrator</span>
-                
-                <!-- Language Toggle -->
-                <div class="flex items-center bg-gray-100 rounded-lg p-1">
-                    <button onclick="switchLanguage('en')" id="lang-en" class="lang-btn px-3 py-1 rounded-md transition active">
-                        EN
-                    </button>
-                    <button onclick="switchLanguage('ar')" id="lang-ar" class="lang-btn px-3 py-1 rounded-md transition">
-                        AR
-                    </button>
-                </div>
+                <span class="text-gray-700 font-semibold hidden md:inline" id="user-name">Administrator</span>
                 
                 <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
-                    <i class="fas fa-sign-out-alt mr-2"></i><span class="hidden md:inline" data-translate="Logout">Logout</span>
+                    <i class="fas fa-sign-out-alt mr-2"></i><span class="hidden md:inline">Logout</span>
                 </button>
-            </div>
-        </div>
+            </div>        </div>
     </div>
     
     <div class="flex">
         <div id="sidebar" class="sidebar fixed md:static inset-y-0 left-0 z-50 w-64 bg-gray-800 text-white md:block h-screen overflow-y-auto">
             <nav class="p-4 space-y-2 mt-16 md:mt-4">
                 <button onclick="showSection('dashboard')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition active">
-                    <i class="fas fa-chart-line mr-3"></i><span data-translate="Dashboard">Dashboard</span>
+                    <i class="fas fa-chart-line mr-3"></i><span>Dashboard</span>
                 </button>
                 <button onclick="showSection('doctors')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
-                    <i class="fas fa-user-md mr-3"></i><span data-translate="Doctors">Doctors</span>
+                    <i class="fas fa-user-md mr-3"></i><span>Doctors</span>
                 </button>
                 <button onclick="showSection('staff')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
-                    <i class="fas fa-users mr-3"></i><span data-translate="Staff">Staff</span>
+                    <i class="fas fa-users mr-3"></i><span>Staff</span>
                 </button>
                 <button onclick="showSection('globalservices')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
-                    <i class="fas fa-briefcase-medical mr-3"></i><span data-translate="Global Services">Global Services</span>
+                    <i class="fas fa-briefcase-medical mr-3"></i><span>Global Services</span>
                 </button>
                 <button onclick="showSection('appointments')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
-                    <i class="fas fa-calendar-check mr-3"></i><span data-translate="Appointments">Appointments</span>
+                    <i class="fas fa-calendar-check mr-3"></i><span>Appointments</span>
                 </button>
                 <button onclick="showSection('calendar')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
-                    <i class="fas fa-calendar mr-3"></i><span data-translate="Calendar View">Calendar View</span>
+                    <i class="fas fa-calendar mr-3"></i><span>Calendar View</span>
                 </button>
                 <button onclick="showSection('analytics')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
-                    <i class="fas fa-chart-bar mr-3"></i><span data-translate="Analytics">Analytics</span>
+                    <i class="fas fa-chart-bar mr-3"></i><span>Analytics</span>
                 </button>
             </nav>
         </div>
@@ -192,13 +118,13 @@
         <div class="flex-1 p-6 overflow-y-auto">
             <!-- Dashboard -->
             <div id="section-dashboard" class="section">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6" data-translate="Dashboard">Dashboard</h2>
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
                 
                 <div class="grid md:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white rounded-xl shadow-lg p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-gray-600 text-sm" data-translate="Total Doctors">Total Doctors</p>
+                                <p class="text-gray-600 text-sm">Total Doctors</p>
                                 <p id="stat-doctors" class="text-3xl font-bold text-primary">0</p>
                             </div>
                             <i class="fas fa-user-md text-primary text-4xl opacity-20"></i>
@@ -207,7 +133,7 @@
                     <div class="bg-white rounded-xl shadow-lg p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-gray-600 text-sm" data-translate="Total Staff">Total Staff</p>
+                                <p class="text-gray-600 text-sm">Total Staff</p>
                                 <p id="stat-staff" class="text-3xl font-bold text-green-600">0</p>
                             </div>
                             <i class="fas fa-users text-green-600 text-4xl opacity-20"></i>
@@ -216,7 +142,7 @@
                     <div class="bg-white rounded-xl shadow-lg p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-gray-600 text-sm" data-translate="Total Appointments">Total Appointments</p>
+                                <p class="text-gray-600 text-sm">Total Appointments</p>
                                 <p id="stat-appointments" class="text-3xl font-bold text-blue-600">0</p>
                             </div>
                             <i class="fas fa-calendar-check text-blue-600 text-4xl opacity-20"></i>
@@ -225,7 +151,7 @@
                     <div class="bg-white rounded-xl shadow-lg p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-gray-600 text-sm" data-translate="Today's Appointments">Today's Appointments</p>
+                                <p class="text-gray-600 text-sm">Today's Appointments</p>
                                 <p id="stat-today" class="text-3xl font-bold text-purple-600">0</p>
                             </div>
                             <i class="fas fa-clock text-purple-600 text-4xl opacity-20"></i>
@@ -234,7 +160,7 @@
                 </div>
                 
                 <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-translate="Recent Appointments">Recent Appointments</h3>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Appointments</h3>
                     <div id="recent-appointments" class="space-y-2"></div>
                 </div>
             </div>
@@ -242,9 +168,9 @@
             <!-- Doctors Section -->
             <div id="section-doctors" class="section hidden">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-3xl font-bold text-gray-800" data-translate="Manage Doctors">Manage Doctors</h2>
+                    <h2 class="text-3xl font-bold text-gray-800">Manage Doctors</h2>
                     <button onclick="showAddDoctorModal()" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
-                        <i class="fas fa-plus mr-2"></i><span data-translate="Add Doctor">Add Doctor</span>
+                        <i class="fas fa-plus mr-2"></i><span>Add Doctor</span>
                     </button>
                 </div>
                 <div id="doctors-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -253,9 +179,9 @@
             <!-- Staff Section -->
             <div id="section-staff" class="section hidden">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-3xl font-bold text-gray-800" data-translate="Manage Staff">Manage Staff</h2>
+                    <h2 class="text-3xl font-bold text-gray-800">Manage Staff</h2>
                     <button onclick="showAddStaffModal()" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
-                        <i class="fas fa-plus mr-2"></i><span data-translate="Add Staff">Add Staff</span>
+                        <i class="fas fa-plus mr-2"></i><span>Add Staff</span>
                     </button>
                 </div>
                 <div id="staff-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -264,17 +190,17 @@
             <!-- Global Services Section -->
             <div id="section-globalservices" class="section hidden">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-3xl font-bold text-gray-800" data-translate="Global Services">Global Services</h2>
+                    <h2 class="text-3xl font-bold text-gray-800">Global Services</h2>
                     <button onclick="showAddGlobalServiceModal()" class="bg-gradient-to-r from-primary to-blue-600 text-white px-6 py-3 rounded-lg hover:shadow-lg transition">
-                        <i class="fas fa-plus mr-2"></i><span data-translate="Add Global Service">Add Global Service</span>
+                        <i class="fas fa-plus mr-2"></i><span>Add Global Service</span>
                     </button>
                 </div>
                 <div class="bg-blue-50 border-l-4 border-primary p-4 mb-6 rounded-lg">
                     <div class="flex items-start">
                         <i class="fas fa-info-circle text-primary text-xl mr-3 mt-1"></i>
                         <div>
-                            <h4 class="font-bold text-gray-800 mb-1" data-translate="About Global Services">About Global Services</h4>
-                            <p class="text-sm text-gray-700" data-translate="Global services are clinic-wide service templates that all doctors can use. Doctors can add these services to their profile and customize pricing or duration as needed.">
+                            <h4 class="font-bold text-gray-800 mb-1">About Global Services</h4>
+                            <p class="text-sm text-gray-700">
                                 Global services are clinic-wide service templates that all doctors can use. Doctors can add these services to their profile and customize pricing or duration as needed.
                             </p>
                         </div>
@@ -285,7 +211,7 @@
             
             <!-- Analytics Section -->
             <div id="section-analytics" class="section hidden">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6" data-translate="Analytics & Reports">Analytics & Reports</h2>
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Analytics & Reports</h2>
                 
                 <!-- Date Range Selector -->
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
@@ -293,7 +219,7 @@
                         <!-- Date Range Picker -->
                         <div class="md:col-span-6">
                             <label class="block text-gray-700 font-semibold mb-2 text-sm">
-                                <i class="fas fa-calendar-alt text-primary mr-2"></i><span data-translate="Select Date Range">Select Date Range</span>
+                                <i class="fas fa-calendar-alt text-primary mr-2"></i><span>Select Date Range</span>
                             </label>
                             <input type="text" id="analytics-date-range" data-placeholder="Click to select date range" placeholder="Click to select date range" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition cursor-pointer" readonly>
                         </div>
@@ -301,17 +227,17 @@
                         <!-- Quick Range Buttons -->
                         <div class="md:col-span-4 flex space-x-2">
                             <button onclick="setQuickRange('week')" class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2.5 rounded-lg hover:from-blue-600 hover:to-blue-700 transition font-semibold text-sm shadow-md">
-                                <i class="fas fa-calendar-week mr-2"></i><span data-translate="Last 7 Days">Last 7 Days</span>
+                                <i class="fas fa-calendar-week mr-2"></i><span>Last 7 Days</span>
                             </button>
                             <button onclick="setQuickRange('month')" class="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2.5 rounded-lg hover:from-purple-600 hover:to-purple-700 transition font-semibold text-sm shadow-md">
-                                <i class="fas fa-calendar-alt mr-2"></i><span data-translate="Last 30 Days">Last 30 Days</span>
+                                <i class="fas fa-calendar-alt mr-2"></i><span>Last 30 Days</span>
                             </button>
                         </div>
                         
                         <!-- Export Button -->
                         <div class="md:col-span-2">
                             <button onclick="exportAnalyticsToCSV()" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2.5 rounded-lg hover:from-green-600 hover:to-green-700 transition font-semibold shadow-md">
-                                <i class="fas fa-download mr-2"></i><span data-translate="Export">Export</span>
+                                <i class="fas fa-download mr-2"></i><span>Export</span>
                             </button>
                         </div>
                     </div>
@@ -331,7 +257,7 @@
                     <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-green-100 text-sm font-medium" data-translate="Completed">Completed</p>
+                                <p class="text-green-100 text-sm font-medium">Completed</p>
                                 <p id="analytics-completed" class="text-4xl font-bold mt-2">0</p>
                                 <p id="analytics-completed-rate" class="text-green-100 text-xs mt-1">0%</p>
                             </div>
@@ -341,7 +267,7 @@
                     <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-orange-100 text-sm font-medium" data-translate="Missed">Missed</p>
+                                <p class="text-orange-100 text-sm font-medium">Missed</p>
                                 <p id="analytics-missed" class="text-4xl font-bold mt-2">0</p>
                                 <p id="analytics-missed-rate" class="text-orange-100 text-xs mt-1">0%</p>
                             </div>
@@ -351,7 +277,7 @@
                     <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-purple-100 text-sm font-medium" data-translate="Avg per Day">Avg per Day</p>
+                                <p class="text-purple-100 text-sm font-medium">Avg per Day</p>
                                 <p id="analytics-avg-day" class="text-4xl font-bold mt-2">0</p>
                             </div>
                             <i class="fas fa-chart-line text-purple-200 text-4xl opacity-50"></i>
@@ -3209,259 +3135,6 @@
         function closeModal() {
             document.getElementById('modal-container').innerHTML = '';
         }
-        
-        // ==================== TRANSLATION SYSTEM ====================
-        
-        const translations = {
-            en: {
-                // Navigation
-                "Clinic Management": "Clinic Management",
-                "Super Admin Portal": "Super Admin Portal",
-                "Administrator": "Administrator",
-                "Dashboard": "Dashboard",
-                "Doctors": "Doctors",
-                "Staff": "Staff",
-                "Appointments": "Appointments",
-                "Calendar View": "Calendar View",
-                "Analytics": "Analytics",
-                "Logout": "Logout",
-                
-                // Dashboard
-                "Total Doctors": "Total Doctors",
-                "Total Staff": "Total Staff",
-                "Total Appointments": "Total Appointments",
-                "Today's Appointments": "Today's Appointments",
-                "Recent Appointments": "Recent Appointments",
-                
-                // Doctors & Staff
-                "Manage Doctors": "Manage Doctors",
-                "Add Doctor": "Add Doctor",
-                "Manage Staff": "Manage Staff",
-                "Add Staff": "Add Staff",
-                
-                // Analytics
-                "Analytics & Reports": "Analytics & Reports",
-                "Select Date Range": "Select Date Range",
-                "Click to select date range": "Click to select date range",
-                "Last 7 Days": "Last 7 Days",
-                "Last 30 Days": "Last 30 Days",
-                "Export": "Export",
-                "Completed": "Completed",
-                "Missed": "Missed",
-                "Avg per Day": "Avg per Day",
-                
-                // Common
-                "Close": "Close",
-                "Save": "Save",
-                "Delete": "Delete",
-                "Edit": "Edit",
-                "Add": "Add",
-                "View": "View",
-                "Loading": "Loading...",
-                "Success": "Success",
-                "Error": "Error",
-                
-                // Global Services
-                "Global Services": "Global Services",
-                "Add Global Service": "Add Global Service",
-                "About Global Services": "About Global Services",
-                "Global services are clinic-wide service templates that all doctors can use. Doctors can add these services to their profile and customize pricing or duration as needed.": "Global services are clinic-wide service templates that all doctors can use. Doctors can add these services to their profile and customize pricing or duration as needed.",
-                "Service Name": "Service Name",
-                "Category": "Category",
-                "Duration (minutes)": "Duration (minutes)",
-                "Price": "Price",
-                "Currency": "Currency",
-                "Description": "Description",
-                "Active (available for doctors)": "Active (available for doctors)",
-                "Select Category": "Select Category",
-                "Consultation": "Consultation",
-                "Dental": "Dental",
-                "Procedure": "Procedure",
-                "Follow-up": "Follow-up",
-                "Surgery": "Surgery",
-                "Therapy": "Therapy",
-                "General Checkup": "General Checkup",
-                "Emergency": "Emergency",
-                "SR Saudi Riyal": "SR Saudi Riyal",
-                "AED UAE Dirham": "AED UAE Dirham",
-                "$ USD": "$ USD",
-                "€ EUR": "€ EUR",
-                "£ GBP": "£ GBP",
-                "Save Service": "Save Service",
-                "Update Service": "Update Service",
-                "Cancel": "Cancel",
-                "Active": "Active",
-                "Inactive": "Inactive",
-                "View Details": "View Details",
-                "No description": "No description",
-                "Free": "Free",
-                "Edit Global Service": "Edit Global Service",
-                "No description provided": "No description provided",
-                "Active - Available for doctors": "Active - Available for doctors",
-                "Created": "Created",
-                "Last Updated": "Last Updated",
-                "Edit Service": "Edit Service",
-                "No global services yet. Add your first service!": "No global services yet. Add your first service!",
-                "e.g., Dental Cleaning": "e.g., Dental Cleaning",
-                "Brief description of the service...": "Brief description of the service...",
-                "minutes": "minutes",
-                "Status": "Status"
-            },
-            ar: {
-                // Navigation
-                "Clinic Management": "إدارة العيادة",
-                "Super Admin Portal": "بوابة المدير العام",
-                "Administrator": "المدير",
-                "Dashboard": "لوحة التحكم",
-                "Doctors": "الأطباء",
-                "Staff": "الموظفين",
-                "Appointments": "المواعيد",
-                "Calendar View": "عرض التقويم",
-                "Analytics": "التحليلات",
-                "Logout": "تسجيل الخروج",
-                
-                // Dashboard
-                "Total Doctors": "إجمالي الأطباء",
-                "Total Staff": "إجمالي الموظفين",
-                "Total Appointments": "إجمالي المواعيد",
-                "Today's Appointments": "مواعيد اليوم",
-                "Recent Appointments": "المواعيد الأخيرة",
-                
-                // Doctors & Staff
-                "Manage Doctors": "إدارة الأطباء",
-                "Add Doctor": "إضافة طبيب",
-                "Manage Staff": "إدارة الموظفين",
-                "Add Staff": "إضافة موظف",
-                
-                // Analytics
-                "Analytics & Reports": "التحليلات والتقارير",
-                "Select Date Range": "اختر نطاق التاريخ",
-                "Click to select date range": "انقر لاختيار نطاق التاريخ",
-                "Last 7 Days": "آخر 7 أيام",
-                "Last 30 Days": "آخر 30 يوم",
-                "Export": "تصدير",
-                "Completed": "مكتمل",
-                "Missed": "فائت",
-                "Avg per Day": "المتوسط يوميًا",
-                
-                // Common
-                "Close": "إغلاق",
-                "Save": "حفظ",
-                "Delete": "حذف",
-                "Edit": "تعديل",
-                "Add": "إضافة",
-                "View": "عرض",
-                "Loading": "جاري التحميل...",
-                "Success": "نجح",
-                "Error": "خطأ",
-                
-                // Global Services
-                "Global Services": "الخدمات العالمية",
-                "Add Global Service": "إضافة خدمة عالمية",
-                "About Global Services": "حول الخدمات العالمية",
-                "Global services are clinic-wide service templates that all doctors can use. Doctors can add these services to their profile and customize pricing or duration as needed.": "الخدمات العالمية هي قوالب خدمات على مستوى العيادة يمكن لجميع الأطباء استخدامها. يمكن للأطباء إضافة هذه الخدمات إلى ملفهم الشخصي وتخصيص الأسعار أو المدة حسب الحاجة.",
-                "Service Name": "اسم الخدمة",
-                "Category": "الفئة",
-                "Duration (minutes)": "المدة (دقائق)",
-                "Price": "السعر",
-                "Currency": "العملة",
-                "Description": "الوصف",
-                "Active (available for doctors)": "نشط (متاح للأطباء)",
-                "Select Category": "اختر الفئة",
-                "Consultation": "استشارة",
-                "Dental": "أسنان",
-                "Procedure": "إجراء",
-                "Follow-up": "متابعة",
-                "Surgery": "جراحة",
-                "Therapy": "علاج",
-                "General Checkup": "فحص عام",
-                "Emergency": "طوارئ",
-                "SR Saudi Riyal": "ريال سعودي",
-                "AED UAE Dirham": "درهم إماراتي",
-                "$ USD": "دولار أمريكي",
-                "€ EUR": "يورو",
-                "£ GBP": "جنيه إسترليني",
-                "Save Service": "حفظ الخدمة",
-                "Update Service": "تحديث الخدمة",
-                "Cancel": "إلغاء",
-                "Active": "نشط",
-                "Inactive": "غير نشط",
-                "View Details": "عرض التفاصيل",
-                "No description": "لا يوجد وصف",
-                "Free": "مجاني",
-                "Edit Global Service": "تعديل الخدمة العالمية",
-                "No description provided": "لم يتم توفير وصف",
-                "Active - Available for doctors": "نشط - متاح للأطباء",
-                "Created": "تم الإنشاء",
-                "Last Updated": "آخر تحديث",
-                "Edit Service": "تعديل الخدمة",
-                "No global services yet. Add your first service!": "لا توجد خدمات عالمية بعد. أضف خدمتك الأولى!",
-                "e.g., Dental Cleaning": "مثال: تنظيف الأسنان",
-                "Brief description of the service...": "وصف موجز للخدمة...",
-                "minutes": "دقيقة",
-                "Status": "الحالة"
-            }
-        };
-        
-        let currentLanguage = 'en';
-        
-        // Helper function to translate text
-        function t(key) {
-            return translations[currentLanguage][key] || key;
-        }
-        
-        // Switch language function
-        function switchLanguage(lang) {
-            currentLanguage = lang;
-            
-            // Update HTML attributes
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            
-            // Update toggle buttons
-            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-            document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
-            
-            // Translate all elements with data-translate attribute
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (translations[lang][key]) {
-                    element.textContent = translations[lang][key];
-                }
-            });
-            
-            // Translate all placeholders with data-placeholder attribute
-            document.querySelectorAll('[data-placeholder]').forEach(element => {
-                const key = element.getAttribute('data-placeholder');
-                if (translations[lang][key]) {
-                    element.placeholder = translations[lang][key];
-                }
-            });
-            
-            // Save language preference
-            localStorage.setItem('preferredLanguage', lang);
-            
-            // Reload dynamic content if needed
-            const activeSection = document.querySelector('.section:not(.hidden)');
-            if (activeSection) {
-                const sectionId = activeSection.id.replace('section-', '');
-                if (sectionId === 'dashboard') loadDashboard();
-                if (sectionId === 'doctors') loadDoctors();
-                if (sectionId === 'staff') loadStaff();
-                if (sectionId === 'globalservices') loadGlobalServices();
-                if (sectionId === 'appointments') loadAppointments();
-                if (sectionId === 'calendar') loadCalendar();
-                if (sectionId === 'analytics') loadAnalytics();
-            }
-        }
-        
-        // Load saved language on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('preferredLanguage') || 'en';
-            if (savedLang === 'ar') {
-                switchLanguage('ar');
-            }
-        });
     </script>
 </body>
 </html>
