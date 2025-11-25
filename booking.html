@@ -579,7 +579,6 @@
                 
                 const specialty = doctor.specialty || 'General Dentist';
                 const experience = doctor.experience || 'Experienced';
-                const branch = doctor.branch || CLINIC_NAME;
                 
                 doctorCard.innerHTML = `
                     <div class="flex items-center justify-between">
@@ -591,9 +590,6 @@
                                 <h3 class="text-xl font-bold text-gray-800">${doctor.name}</h3>
                                 <p class="text-gray-600">${specialty}</p>
                                 <p class="text-sm text-gray-500">${experience}</p>
-                                <p class="text-sm text-primary font-semibold mt-1">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>${branch}
-                                </p>
                             </div>
                         </div>
                         <i class="fas fa-chevron-right text-gray-400 text-2xl"></i>
@@ -614,9 +610,8 @@
             updateStepIndicator(3);
             
             // Display selected doctor
-            const branch = doctor.branch || CLINIC_NAME;
             document.getElementById('selected-doctor-display').textContent = 
-                `Doctor: ${doctor.name} - ${branch}`;
+                `Doctor: ${doctor.name}`;
             
             // Load and render time slots
             await renderTimeSlots(doctor);
