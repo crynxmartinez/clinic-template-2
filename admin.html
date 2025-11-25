@@ -836,6 +836,7 @@
                         email: email,
                         password: password, // Store password in database
                         phone: phone,
+                        specialty: specialty, // ✅ ADD SPECIALTY HERE
                         role: 'doctor',
                         clinicId: CLINIC_ID, // ✅ THIS CLINIC ONLY
                         active: true,
@@ -1140,11 +1141,13 @@
                     return;
                 }
                 
-                // Update user document
+                // Update user document (including specialty)
                 await db.collection('users').doc(doctorId).update({
                     name: name,
                     phone: phone,
-                    username: username
+                    username: username,
+                    specialty: specialty, // ✅ ADD SPECIALTY HERE
+                    active: active // ✅ Also sync active status
                 });
                 
                 // Update or create doctor profile
