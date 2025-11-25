@@ -3362,6 +3362,8 @@
                 // Get service info if available
                 let serviceInfo = '';
                 let serviceDuration = null;
+                
+                // Check if serviceId exists (new format with linked services)
                 if (apt.serviceId) {
                     try {
                         const serviceDoc = await db.collection('services').doc(apt.serviceId).get();
@@ -3384,6 +3386,19 @@
                     } catch (error) {
                         console.error('Error loading service:', error);
                     }
+                }
+                // If no serviceId but has service name (old format from booking form)
+                else if (apt.service || apt.patientService) {
+                    const serviceName = apt.service || apt.patientService;
+                    serviceInfo = `
+                        <div class="bg-blue-50 rounded-lg p-4 mb-4">
+                            <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                                <i class="fas fa-briefcase-medical text-primary mr-2"></i>Service Requested
+                            </h4>
+                            <p class="text-sm text-gray-700">${serviceName}</p>
+                            <p class="text-xs text-gray-500 mt-1"><em>Note: Duration not available for this booking</em></p>
+                        </div>
+                    `;
                 }
                 
                 // Use service duration if appointment duration is not set
