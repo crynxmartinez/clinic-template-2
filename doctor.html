@@ -37,8 +37,11 @@
             .sidebar.active { transform: translateX(0); }
         }
         .nav-btn.active { background-color: rgba(255, 255, 255, 0.1); }
-        .sortable-ghost { opacity: 0.4; }
-        .kanban-column { min-height: 200px; }
+        .sortable-ghost { opacity: 0.4; background: #e0e7ff; }
+        .sortable-drag { opacity: 1; cursor: grabbing !important; transform: rotate(2deg); }
+        .sortable-chosen { background: #f3f4f6; }
+        .kanban-column { min-height: 200px; transition: background-color 0.2s ease; }
+        .kanban-column.drag-over { background-color: rgba(59, 130, 246, 0.1); }
         
         /* Flatpickr Custom Styles */
         .flatpickr-calendar {
@@ -828,7 +831,17 @@
                 const element = document.getElementById(`kanban-${status}`);
                 const sortable = new Sortable(element, {
                     group: 'kanban',
-                    animation: 150,
+                    animation: 200,
+                    easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                    ghostClass: 'sortable-ghost',
+                    chosenClass: 'sortable-chosen',
+                    dragClass: 'sortable-drag',
+                    forceFallback: false,
+                    fallbackTolerance: 3,
+                    scroll: true,
+                    scrollSensitivity: 60,
+                    scrollSpeed: 10,
+                    bubbleScroll: true,
                     onEnd: async function(evt) {
                         const appointmentId = evt.item.dataset.id;
                         const newStatus = evt.to.id.replace('kanban-', '');
