@@ -2211,18 +2211,22 @@
                 console.log('📦 Final schedule object:', schedule);
                 
                 // Update doctors collection
+                console.log('💾 Saving to doctors collection, doc ID:', doctorProfile.id);
                 await db.collection('doctors').doc(doctorProfile.id).update({
                     weeklySchedule: schedule,
                     appointmentDuration: selectedDuration,
                     bufferTime: selectedBuffer
                 });
+                console.log('✅ Saved to doctors collection');
                 
                 // ALSO update users collection for booking page
+                console.log('💾 Saving to users collection, user ID:', currentUser.id);
                 await db.collection('users').doc(currentUser.id).update({
                     weeklySchedule: schedule,
                     appointmentDuration: selectedDuration,
                     bufferTime: selectedBuffer
                 });
+                console.log('✅ Saved to users collection');
                 
                 doctorProfile.weeklySchedule = schedule;
                 doctorProfile.appointmentDuration = selectedDuration;
