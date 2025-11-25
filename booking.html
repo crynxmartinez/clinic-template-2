@@ -414,11 +414,16 @@
             renderCalendar();
         });
 
-        // Load services from Firebase
+        // Load services from Firebase (FILTERED BY CLINIC_ID)
         async function loadServices() {
             try {
-                const snapshot = await db.collection('services').where('active', '==', true).get();
+                const snapshot = await db.collection('services')
+                    .where('clinicId', '==', CLINIC_ID)
+                    .where('active', '==', true)
+                    .get();
                 allServices = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                console.log(`✅ Loaded ${allServices.length} services for clinic: ${CLINIC_NAME}`);
                 
                 const serviceSelect = document.getElementById('patient-service');
                 allServices.forEach(service => {
@@ -447,9 +452,10 @@
                 console.log(`✅ Loaded ${allDoctors.length} doctors for clinic: ${CLINIC_NAME}`);
                 console.log('📋 Doctor data:', allDoctors);
                 
-                // Debug: Check each doctor's schedule
+                // Debug: Check each doctor's schedule and specialty
                 allDoctors.forEach(doctor => {
                     console.log(`👨‍⚕️ Doctor: ${doctor.name}`);
+                    console.log('   specialty:', doctor.specialty);
                     console.log('   weeklySchedule:', doctor.weeklySchedule);
                     if (doctor.weeklySchedule) {
                         Object.keys(doctor.weeklySchedule).forEach(day => {
@@ -593,7 +599,6 @@
                 doctorCard.onclick = () => selectDoctor(doctor);
                 
                 const specialty = doctor.specialty || 'General Dentist';
-                const experience = doctor.experience || 'Experienced';
                 
                 doctorCard.innerHTML = `
                     <div class="flex items-center justify-between">
@@ -604,7 +609,6 @@
                             <div>
                                 <h3 class="text-xl font-bold text-gray-800">${doctor.name}</h3>
                                 <p class="text-gray-600">${specialty}</p>
-                                <p class="text-sm text-gray-500">${experience}</p>
                             </div>
                         </div>
                         <i class="fas fa-chevron-right text-gray-400 text-2xl"></i>
