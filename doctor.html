@@ -427,8 +427,8 @@
         // Current user
         let currentUser = null;
         
-        // CRITICAL: Authentication and Clinic Access Check (DATABASE-ONLY)
-        function checkAuth() {
+        // CRITICAL: Session and Clinic Access Check (DATABASE-ONLY)
+        function checkSession() {
             const currentUserStr = localStorage.getItem('currentUser');
             
             if (!currentUserStr) {
@@ -464,8 +464,8 @@
                 initializePage();
                 
             } catch (error) {
-                console.error('Auth error:', error);
-                alert('Authentication error. Please try again.');
+                console.error('Session error:', error);
+                alert('Session error. Please login again.');
                 localStorage.removeItem('currentUser');
                 window.location.href = 'login.html';
             }
@@ -2410,5 +2410,5 @@
             return `${hour12}:${minutes.toString().padStart(2, '0')} ${period}`;
         }
         
-        // Check authentication on page load - MUST BE AT THE END after all functions are defined
-        checkAuth();
+        // Check session on page load - MUST BE AT THE END after all functions are defined
+        checkSession();
