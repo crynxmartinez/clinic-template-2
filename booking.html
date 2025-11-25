@@ -577,6 +577,10 @@
                 doctorCard.className = 'border-2 border-gray-200 rounded-lg p-6 hover:border-primary transition cursor-pointer';
                 doctorCard.onclick = () => selectDoctor(doctor);
                 
+                const specialty = doctor.specialty || 'General Dentist';
+                const experience = doctor.experience || 'Experienced';
+                const branch = doctor.branch || CLINIC_NAME;
+                
                 doctorCard.innerHTML = `
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
@@ -585,10 +589,10 @@
                             </div>
                             <div>
                                 <h3 class="text-xl font-bold text-gray-800">${doctor.name}</h3>
-                                <p class="text-gray-600">${doctor.specialty}</p>
-                                <p class="text-sm text-gray-500">${doctor.experience} experience</p>
+                                <p class="text-gray-600">${specialty}</p>
+                                <p class="text-sm text-gray-500">${experience}</p>
                                 <p class="text-sm text-primary font-semibold mt-1">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>${doctor.branch}
+                                    <i class="fas fa-map-marker-alt mr-1"></i>${branch}
                                 </p>
                             </div>
                         </div>
@@ -610,8 +614,9 @@
             updateStepIndicator(3);
             
             // Display selected doctor
+            const branch = doctor.branch || CLINIC_NAME;
             document.getElementById('selected-doctor-display').textContent = 
-                `Doctor: ${doctor.name} - ${doctor.branch}`;
+                `Doctor: ${doctor.name} - ${branch}`;
             
             // Load and render time slots
             await renderTimeSlots(doctor);
@@ -723,7 +728,7 @@
             document.getElementById('confirm-date').textContent = selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             document.getElementById('confirm-time').textContent = time;
             document.getElementById('confirm-doctor').textContent = selectedDoctor.name;
-            document.getElementById('confirm-branch').textContent = selectedDoctor.branch;
+            document.getElementById('confirm-branch').textContent = selectedDoctor.branch || CLINIC_NAME;
         }
 
         // Submit booking
@@ -753,7 +758,7 @@
                     date: formatDate(selectedDate),
                     time: selectedTime,
                     startTime: selectedTime,
-                    branch: selectedDoctor.branch,
+                    branch: selectedDoctor.branch || CLINIC_NAME,
                     service: document.getElementById('patient-service').value,
                     patientService: document.getElementById('patient-service').value,
                     notes: document.getElementById('patient-notes').value,
@@ -780,7 +785,7 @@
                     },
                     {
                         key: 'branch',
-                        value: selectedDoctor.branch
+                        value: selectedDoctor.branch || CLINIC_NAME
                     },
                     {
                         key: 'service',
@@ -807,7 +812,7 @@
                 document.getElementById('success-date').textContent = document.getElementById('confirm-date').textContent;
                 document.getElementById('success-time').textContent = selectedTime;
                 document.getElementById('success-doctor').textContent = selectedDoctor.name;
-                document.getElementById('success-branch').textContent = selectedDoctor.branch;
+                document.getElementById('success-branch').textContent = selectedDoctor.branch || CLINIC_NAME;
                 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 
