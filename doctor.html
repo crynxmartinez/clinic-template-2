@@ -103,6 +103,9 @@
                 <button onclick="showSection('kanban')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition active">
                     <i class="fas fa-columns mr-3"></i><span>Appointment Board</span>
                 </button>
+                <button onclick="showSection('profile')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+                    <i class="fas fa-user-circle mr-3"></i><span>Profile</span>
+                </button>
                 <button onclick="showSection('services')" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-700 transition">
                     <i class="fas fa-briefcase-medical mr-3"></i><span>Services</span>
                 </button>
@@ -173,6 +176,131 @@
                         </div>
                         <div id="kanban-completed" class="kanban-column space-y-2"></div>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Profile Section -->
+            <div id="section-profile" class="section hidden">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-user-circle text-primary mr-2"></i>My Profile
+                </h2>
+                
+                <div class="max-w-4xl space-y-6">
+                    
+                    <!-- Doctor UID Card -->
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-primary rounded-xl p-6 shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-key text-primary mr-2"></i>Your Doctor UID
+                        </h3>
+                        <div class="bg-white rounded-lg p-4 border-2 border-primary">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-600 mb-1">Your Unique Identifier</p>
+                                    <code id="doctor-uid" class="text-2xl font-mono font-bold text-primary block">Loading...</code>
+                                </div>
+                                <button onclick="copyUID()" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold shadow-md">
+                                    <i class="fas fa-copy mr-2"></i>Copy UID
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
+                            <p class="text-sm text-yellow-800">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                <strong>Important:</strong> Share this UID with clinic administrators to join additional clinics. Keep it private and secure.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Personal Information -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-user text-primary mr-2"></i>Personal Information
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Full Name</label>
+                                <input type="text" id="profile-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                                <input type="email" id="profile-email" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50" readonly>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Phone</label>
+                                <input type="tel" id="profile-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Specialty</label>
+                                <input type="text" id="profile-specialty" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Professional Information -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-briefcase text-primary mr-2"></i>Professional Information
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">License Number</label>
+                                <input type="text" id="profile-license" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Years of Experience</label>
+                                <input type="number" id="profile-experience" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-gray-700 font-semibold mb-2">Education</label>
+                                <textarea id="profile-education" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" placeholder="e.g., DDS from University of..."></textarea>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-gray-700 font-semibold mb-2">Bio / About Me</label>
+                                <textarea id="profile-bio" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" placeholder="Tell patients about yourself..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Social Media Links -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-share-alt text-primary mr-2"></i>Social Media & Links
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">
+                                    <i class="fab fa-facebook text-blue-600 mr-2"></i>Facebook
+                                </label>
+                                <input type="url" id="profile-facebook" placeholder="https://facebook.com/..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">
+                                    <i class="fab fa-instagram text-pink-600 mr-2"></i>Instagram
+                                </label>
+                                <input type="url" id="profile-instagram" placeholder="https://instagram.com/..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">
+                                    <i class="fab fa-linkedin text-blue-700 mr-2"></i>LinkedIn
+                                </label>
+                                <input type="url" id="profile-linkedin" placeholder="https://linkedin.com/in/..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">
+                                    <i class="fas fa-globe text-green-600 mr-2"></i>Website
+                                </label>
+                                <input type="url" id="profile-website" placeholder="https://..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Save Button -->
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="saveProfile()" class="bg-primary text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-semibold shadow-lg">
+                            <i class="fas fa-save mr-2"></i>Save Profile
+                        </button>
+                    </div>
+                    
                 </div>
             </div>
             
@@ -610,6 +738,8 @@
             
             if (section === 'kanban') {
                 loadKanban();
+            } else if (section === 'profile') {
+                loadProfile();
             } else if (section === 'services') {
                 loadServices();
             } else if (section === 'availability') {
@@ -617,6 +747,97 @@
                 if (doctorProfile) {
                     loadAvailability();
                 }
+            }
+        }
+        
+        async function loadProfile() {
+            try {
+                // Display Doctor UID
+                document.getElementById('doctor-uid').textContent = currentUser.id;
+                
+                // Load user data
+                document.getElementById('profile-name').value = currentUser.name || '';
+                document.getElementById('profile-email').value = currentUser.email || '';
+                document.getElementById('profile-phone').value = currentUser.phone || '';
+                document.getElementById('profile-specialty').value = currentUser.specialty || '';
+                
+                // Load doctor profile data if exists
+                if (doctorProfile) {
+                    document.getElementById('profile-license').value = doctorProfile.license || '';
+                    document.getElementById('profile-experience').value = doctorProfile.experience || '';
+                    document.getElementById('profile-education').value = doctorProfile.education || '';
+                    document.getElementById('profile-bio').value = doctorProfile.bio || '';
+                    document.getElementById('profile-facebook').value = doctorProfile.facebook || '';
+                    document.getElementById('profile-instagram').value = doctorProfile.instagram || '';
+                    document.getElementById('profile-linkedin').value = doctorProfile.linkedin || '';
+                    document.getElementById('profile-website').value = doctorProfile.website || '';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showToast('Error loading profile', 'error');
+            }
+        }
+        
+        function copyUID() {
+            const uid = currentUser.id;
+            navigator.clipboard.writeText(uid).then(() => {
+                showToast('UID copied to clipboard!', 'success');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                showToast('Failed to copy UID', 'error');
+            });
+        }
+        
+        async function saveProfile() {
+            try {
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+                
+                // Update users collection
+                await db.collection('users').doc(currentUser.id).update({
+                    name: document.getElementById('profile-name').value,
+                    phone: document.getElementById('profile-phone').value,
+                    specialty: document.getElementById('profile-specialty').value,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update or create doctor profile
+                const profileData = {
+                    license: document.getElementById('profile-license').value,
+                    experience: parseInt(document.getElementById('profile-experience').value) || 0,
+                    education: document.getElementById('profile-education').value,
+                    bio: document.getElementById('profile-bio').value,
+                    facebook: document.getElementById('profile-facebook').value,
+                    instagram: document.getElementById('profile-instagram').value,
+                    linkedin: document.getElementById('profile-linkedin').value,
+                    website: document.getElementById('profile-website').value,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                if (doctorProfile) {
+                    await db.collection('doctors').doc(doctorProfile.id).update(profileData);
+                } else {
+                    profileData.userId = currentUser.id;
+                    profileData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    const newProfile = await db.collection('doctors').add(profileData);
+                    doctorProfile = { id: newProfile.id, ...profileData };
+                }
+                
+                // Update current user object
+                currentUser.name = document.getElementById('profile-name').value;
+                currentUser.phone = document.getElementById('profile-phone').value;
+                currentUser.specialty = document.getElementById('profile-specialty').value;
+                
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                showToast('Profile updated successfully!', 'success');
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showToast('Error saving profile', 'error');
+                btn.disabled = false;
+                btn.innerHTML = originalText;
             }
         }
         
