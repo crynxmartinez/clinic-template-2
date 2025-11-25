@@ -430,6 +430,19 @@
                 allDoctors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
                 console.log(`✅ Loaded ${allDoctors.length} doctors for clinic: ${CLINIC_NAME}`);
+                console.log('📋 Doctor data:', allDoctors);
+                
+                // Debug: Check each doctor's schedule
+                allDoctors.forEach(doctor => {
+                    console.log(`👨‍⚕️ Doctor: ${doctor.name}`);
+                    console.log('   weeklySchedule:', doctor.weeklySchedule);
+                    if (doctor.weeklySchedule) {
+                        Object.keys(doctor.weeklySchedule).forEach(day => {
+                            const schedule = doctor.weeklySchedule[day];
+                            console.log(`   ${day}:`, schedule);
+                        });
+                    }
+                });
                 
                 if (allDoctors.length === 0) {
                     console.warn('⚠️ No doctors found for this clinic. Please add doctors in admin portal.');
@@ -501,11 +514,21 @@
         // Check if date has available doctors
         async function checkDateAvailability(date, dayDiv) {
             const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+            console.log(`🔍 Checking availability for ${dayName} (${date.toDateString()})`);
+            
             const hasAvailableDoctors = allDoctors.some(doctor => {
-                if (!doctor.weeklySchedule) return false;
+                if (!doctor.weeklySchedule) {
+                    console.log(`   ❌ ${doctor.name}: No weeklySchedule`);
+                    return false;
+                }
                 const daySchedule = doctor.weeklySchedule[dayName];
-                return daySchedule && daySchedule.length > 0;
+                console.log(`   📅 ${doctor.name}: ${dayName} schedule:`, daySchedule);
+                const isAvailable = daySchedule && daySchedule.length > 0;
+                console.log(`   ${isAvailable ? '✅' : '❌'} ${doctor.name}: ${isAvailable ? 'Available' : 'Not available'}`);
+                return isAvailable;
             });
+            
+            console.log(`   📊 Result: ${hasAvailableDoctors ? '✅ AVAILABLE' : '❌ NOT AVAILABLE'}`);
             
             if (hasAvailableDoctors) {
                 dayDiv.classList.add('available');
