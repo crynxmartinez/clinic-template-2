@@ -612,6 +612,41 @@
             return text;
         }
         
+        // Re-login modal for admin after creating doctor/staff
+        function showReLoginModal(adminEmail) {
+            return new Promise((resolve, reject) => {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+                        <div class="text-center mb-6">
+                            <i class="fas fa-lock text-primary text-5xl mb-4"></i>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Re-authenticate</h3>
+                            <p class="text-gray-600">Please enter your admin password to continue</p>
+                            <p class="text-sm text-gray-500 mt-2">${adminEmail}</p>
+                        </div>
+                        <form id="relogin-form" class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Password *</label>
+                                <input type="password" id="admin-relogin-password" required autofocus class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                            </div>
+                            <button type="submit" class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
+                                <i class="fas fa-sign-in-alt mr-2"></i>Continue
+                            </button>
+                        </form>
+                    </div>
+                `;
+                document.getElementById('modal-container').appendChild(modal);
+                
+                document.getElementById('relogin-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const password = document.getElementById('admin-relogin-password').value;
+                    modal.remove();
+                    resolve(password);
+                });
+            });
+        }
+        
         function showToast(message, type = 'success') {
             const colors = { success: 'bg-green-500', error: 'bg-red-500', warning: 'bg-yellow-500', info: 'bg-blue-500' };
             const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
@@ -787,6 +822,12 @@
             
             document.getElementById('doctor-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating...';
+                
                 try {
                     const name = document.getElementById('doctor-name').value;
                     const email = document.getElementById('doctor-email').value.toLowerCase();
@@ -794,14 +835,21 @@
                     const password = document.getElementById('doctor-password').value;
                     const specialty = document.getElementById('doctor-specialty').value;
                     
-                    // Save current admin user
-                    const currentAdminUser = auth.currentUser;
+                    // Store admin credentials temporarily
+                    const adminEmail = auth.currentUser.email;
                     
                     // Create Firebase Auth account for doctor
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     const doctorUid = userCredential.user.uid;
                     
-                    // Create Firestore user document with the Auth UID
+                    // Immediately sign out the new doctor and sign back in as admin
+                    await auth.signOut();
+                    
+                    // Show re-login modal
+                    const adminPassword = await showReLoginModal(adminEmail);
+                    await auth.signInWithEmailAndPassword(adminEmail, adminPassword);
+                    
+                    // Now create Firestore documents
                     await db.collection('users').doc(doctorUid).set({
                         name: name,
                         email: email,
@@ -827,10 +875,6 @@
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
-                    // Sign out the doctor and sign back in as admin
-                    await auth.signOut();
-                    await auth.signInWithEmailAndPassword(currentAdminUser.email, prompt('Please re-enter your admin password to continue:'));
-                    
                     // Create contact in GoHighLevel
                     await upsertGHLContact({
                         name: name,
@@ -839,12 +883,14 @@
                         tags: ['Doctor']
                     });
                     
-                    showToast('Doctor account created successfully! They can now login.', 'success');
+                    showToast(`✅ Doctor "${name}" created! They can login with: ${email}`, 'success');
                     closeModal();
                     loadDoctors();
                 } catch (error) {
                     console.error('Error adding doctor:', error);
                     showToast(error.message || 'Error adding doctor', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
                 }
             });
         }
@@ -1158,21 +1204,38 @@
             
             if (!confirmed) return;
             
+            closeModal(); // Close details modal first
+            
+            // Show loading spinner
+            const loadingModal = document.createElement('div');
+            loadingModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            loadingModal.innerHTML = `
+                <div class="bg-white rounded-xl shadow-2xl p-8 flex flex-col items-center space-y-4">
+                    <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <p class="text-gray-700 font-semibold text-lg">Deleting doctor...</p>
+                </div>
+            `;
+            document.body.appendChild(loadingModal);
+            
             try {
                 await db.collection('users').doc(doctorId).delete();
                 
-                const profileSnap = await db.collection('doctors').where('userId', '==', doctorId).get();
-                profileSnap.docs.forEach(doc => doc.ref.delete());
+                const profileSnap = await db.collection('doctors').doc(doctorId).get();
+                if (profileSnap.exists) {
+                    await profileSnap.ref.delete();
+                }
                 
                 const servicesSnap = await db.collection('services').where('doctorId', '==', doctorId).get();
-                servicesSnap.docs.forEach(doc => doc.ref.delete());
+                const deletePromises = servicesSnap.docs.map(doc => doc.ref.delete());
+                await Promise.all(deletePromises);
                 
-                showToast('Doctor deleted', 'success');
-                closeModal();
+                loadingModal.remove();
+                showToast('✅ Doctor deleted successfully!', 'success');
                 loadDoctors();
             } catch (error) {
                 console.error('Error deleting doctor:', error);
-                showToast('Error deleting doctor', 'error');
+                loadingModal.remove();
+                showToast('❌ Error deleting doctor: ' + error.message, 'error');
             }
         }
         
@@ -1186,20 +1249,39 @@
             
             if (!confirmed) return;
             
+            // Show loading spinner
+            const loadingModal = document.createElement('div');
+            loadingModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            loadingModal.innerHTML = `
+                <div class="bg-white rounded-xl shadow-2xl p-8 flex flex-col items-center space-y-4">
+                    <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <p class="text-gray-700 font-semibold text-lg">Deleting doctor...</p>
+                </div>
+            `;
+            document.body.appendChild(loadingModal);
+            
             try {
+                // Delete user auth account (if possible)
                 await db.collection('users').doc(id).delete();
                 
-                const profileSnap = await db.collection('doctors').where('userId', '==', id).get();
-                profileSnap.docs.forEach(doc => doc.ref.delete());
+                // Delete doctor profile
+                const profileSnap = await db.collection('doctors').doc(id).get();
+                if (profileSnap.exists) {
+                    await profileSnap.ref.delete();
+                }
                 
+                // Delete associated services
                 const servicesSnap = await db.collection('services').where('doctorId', '==', id).get();
-                servicesSnap.docs.forEach(doc => doc.ref.delete());
+                const deletePromises = servicesSnap.docs.map(doc => doc.ref.delete());
+                await Promise.all(deletePromises);
                 
-                showToast('Doctor deleted', 'success');
+                loadingModal.remove();
+                showToast('✅ Doctor deleted successfully!', 'success');
                 loadDoctors();
             } catch (error) {
                 console.error('Error deleting doctor:', error);
-                showToast('Error deleting doctor', 'error');
+                loadingModal.remove();
+                showToast('❌ Error deleting doctor: ' + error.message, 'error');
             }
         }
         
@@ -1320,6 +1402,12 @@
             
             document.getElementById('staff-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating...';
+                
                 try {
                     const name = document.getElementById('staff-name').value;
                     const email = document.getElementById('staff-email').value.toLowerCase();
@@ -1328,14 +1416,21 @@
                     const select = document.getElementById('staff-doctors');
                     const assignedDoctors = Array.from(select.selectedOptions).map(opt => opt.value);
                     
-                    // Save current admin user
-                    const currentAdminUser = auth.currentUser;
+                    // Store admin credentials temporarily
+                    const adminEmail = auth.currentUser.email;
                     
                     // Create Firebase Auth account for staff
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     const staffUid = userCredential.user.uid;
                     
-                    // Create Firestore user document with the Auth UID
+                    // Immediately sign out the new staff and sign back in as admin
+                    await auth.signOut();
+                    
+                    // Show re-login modal
+                    const adminPassword = await showReLoginModal(adminEmail);
+                    await auth.signInWithEmailAndPassword(adminEmail, adminPassword);
+                    
+                    // Now create Firestore document
                     await db.collection('users').doc(staffUid).set({
                         name: name,
                         email: email,
@@ -1347,10 +1442,6 @@
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
-                    // Sign out the staff and sign back in as admin
-                    await auth.signOut();
-                    await auth.signInWithEmailAndPassword(currentAdminUser.email, prompt('Please re-enter your admin password to continue:'));
-                    
                     // Create contact in GoHighLevel
                     await upsertGHLContact({
                         name: name,
@@ -1359,12 +1450,14 @@
                         tags: ['Staff']
                     });
                     
-                    showToast('Staff account created successfully! They can now login.', 'success');
+                    showToast(`✅ Staff "${name}" created! They can login with: ${email}`, 'success');
                     closeModal();
                     loadStaff();
                 } catch (error) {
                     console.error('Error adding staff:', error);
                     showToast(error.message || 'Error adding staff', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
                 }
             });
         }
@@ -1736,14 +1829,28 @@
             
             if (!confirmed) return;
             
+            closeModal(); // Close details modal first
+            
+            // Show loading spinner
+            const loadingModal = document.createElement('div');
+            loadingModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            loadingModal.innerHTML = `
+                <div class="bg-white rounded-xl shadow-2xl p-8 flex flex-col items-center space-y-4">
+                    <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <p class="text-gray-700 font-semibold text-lg">Deleting staff member...</p>
+                </div>
+            `;
+            document.body.appendChild(loadingModal);
+            
             try {
                 await db.collection('users').doc(staffId).delete();
-                showToast('Staff deleted', 'success');
-                closeModal();
+                loadingModal.remove();
+                showToast('✅ Staff member deleted successfully!', 'success');
                 loadStaff();
             } catch (error) {
                 console.error('Error deleting staff:', error);
-                showToast('Error deleting staff', 'error');
+                loadingModal.remove();
+                showToast('❌ Error deleting staff: ' + error.message, 'error');
             }
         }
         
@@ -1757,13 +1864,26 @@
             
             if (!confirmed) return;
             
+            // Show loading spinner
+            const loadingModal = document.createElement('div');
+            loadingModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            loadingModal.innerHTML = `
+                <div class="bg-white rounded-xl shadow-2xl p-8 flex flex-col items-center space-y-4">
+                    <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <p class="text-gray-700 font-semibold text-lg">Deleting staff member...</p>
+                </div>
+            `;
+            document.body.appendChild(loadingModal);
+            
             try {
                 await db.collection('users').doc(id).delete();
-                showToast('Staff deleted', 'success');
+                loadingModal.remove();
+                showToast('✅ Staff member deleted successfully!', 'success');
                 loadStaff();
             } catch (error) {
                 console.error('Error deleting staff:', error);
-                showToast('Error deleting staff', 'error');
+                loadingModal.remove();
+                showToast('❌ Error deleting staff: ' + error.message, 'error');
             }
         }
         
