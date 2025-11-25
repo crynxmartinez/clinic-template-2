@@ -2058,16 +2058,31 @@
         function copyToWeekdays() {
             const monday = {
                 enabled: document.getElementById('schedule-monday-enabled').checked,
-                start: document.getElementById('schedule-monday-start').value,
-                end: document.getElementById('schedule-monday-end').value
+                amEnabled: document.getElementById('schedule-monday-am-enabled').checked,
+                amStart: document.getElementById('schedule-monday-am-start')?.value,
+                amEnd: document.getElementById('schedule-monday-am-end')?.value,
+                pmEnabled: document.getElementById('schedule-monday-pm-enabled').checked,
+                pmStart: document.getElementById('schedule-monday-pm-start')?.value,
+                pmEnd: document.getElementById('schedule-monday-pm-end')?.value
             };
             
             const weekdays = ['tuesday', 'wednesday', 'thursday', 'friday'];
             weekdays.forEach(day => {
+                // Copy main toggle
                 document.getElementById(`schedule-${day}-enabled`).checked = monday.enabled;
-                document.getElementById(`schedule-${day}-start`).value = monday.start;
-                document.getElementById(`schedule-${day}-end`).value = monday.end;
                 toggleDay(day);
+                
+                // Copy AM schedule
+                document.getElementById(`schedule-${day}-am-enabled`).checked = monday.amEnabled;
+                if (monday.amStart) document.getElementById(`schedule-${day}-am-start`).value = monday.amStart;
+                if (monday.amEnd) document.getElementById(`schedule-${day}-am-end`).value = monday.amEnd;
+                togglePeriod(day, 'am');
+                
+                // Copy PM schedule
+                document.getElementById(`schedule-${day}-pm-enabled`).checked = monday.pmEnabled;
+                if (monday.pmStart) document.getElementById(`schedule-${day}-pm-start`).value = monday.pmStart;
+                if (monday.pmEnd) document.getElementById(`schedule-${day}-pm-end`).value = monday.pmEnd;
+                togglePeriod(day, 'pm');
             });
             
             showToast('Schedule copied to weekdays', 'success');
@@ -2077,16 +2092,31 @@
         function copyToAll() {
             const monday = {
                 enabled: document.getElementById('schedule-monday-enabled').checked,
-                start: document.getElementById('schedule-monday-start').value,
-                end: document.getElementById('schedule-monday-end').value
+                amEnabled: document.getElementById('schedule-monday-am-enabled').checked,
+                amStart: document.getElementById('schedule-monday-am-start')?.value,
+                amEnd: document.getElementById('schedule-monday-am-end')?.value,
+                pmEnabled: document.getElementById('schedule-monday-pm-enabled').checked,
+                pmStart: document.getElementById('schedule-monday-pm-start')?.value,
+                pmEnd: document.getElementById('schedule-monday-pm-end')?.value
             };
             
             const allDays = ['tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
             allDays.forEach(day => {
+                // Copy main toggle
                 document.getElementById(`schedule-${day}-enabled`).checked = monday.enabled;
-                document.getElementById(`schedule-${day}-start`).value = monday.start;
-                document.getElementById(`schedule-${day}-end`).value = monday.end;
                 toggleDay(day);
+                
+                // Copy AM schedule
+                document.getElementById(`schedule-${day}-am-enabled`).checked = monday.amEnabled;
+                if (monday.amStart) document.getElementById(`schedule-${day}-am-start`).value = monday.amStart;
+                if (monday.amEnd) document.getElementById(`schedule-${day}-am-end`).value = monday.amEnd;
+                togglePeriod(day, 'am');
+                
+                // Copy PM schedule
+                document.getElementById(`schedule-${day}-pm-enabled`).checked = monday.pmEnabled;
+                if (monday.pmStart) document.getElementById(`schedule-${day}-pm-start`).value = monday.pmStart;
+                if (monday.pmEnd) document.getElementById(`schedule-${day}-pm-end`).value = monday.pmEnd;
+                togglePeriod(day, 'pm');
             });
             
             showToast('Schedule copied to all days', 'success');
@@ -2101,9 +2131,29 @@
                 days.forEach(day => {
                     const isEnabled = document.getElementById(`schedule-${day}-enabled`).checked;
                     if (isEnabled) {
-                        const start = document.getElementById(`schedule-${day}-start`).value;
-                        const end = document.getElementById(`schedule-${day}-end`).value;
-                        schedule[day] = [{ start, end }];
+                        const daySchedule = [];
+                        
+                        // Check AM period
+                        const amEnabled = document.getElementById(`schedule-${day}-am-enabled`)?.checked;
+                        if (amEnabled) {
+                            const amStart = document.getElementById(`schedule-${day}-am-start`)?.value;
+                            const amEnd = document.getElementById(`schedule-${day}-am-end`)?.value;
+                            if (amStart && amEnd) {
+                                daySchedule.push({ period: 'am', start: amStart, end: amEnd });
+                            }
+                        }
+                        
+                        // Check PM period
+                        const pmEnabled = document.getElementById(`schedule-${day}-pm-enabled`)?.checked;
+                        if (pmEnabled) {
+                            const pmStart = document.getElementById(`schedule-${day}-pm-start`)?.value;
+                            const pmEnd = document.getElementById(`schedule-${day}-pm-end`)?.value;
+                            if (pmStart && pmEnd) {
+                                daySchedule.push({ period: 'pm', start: pmStart, end: pmEnd });
+                            }
+                        }
+                        
+                        schedule[day] = daySchedule;
                     } else {
                         schedule[day] = [];
                     }
