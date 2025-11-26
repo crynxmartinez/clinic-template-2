@@ -291,7 +291,8 @@
                     email: userData.email,
                     name: userData.name,
                     role: userData.role,
-                    clinicId: userData.clinicId
+                    clinicId: userData.clinicId,
+                    assignedDoctors: userData.assignedDoctors || [] // For staff portal
                 }));
                 
                 // Success
