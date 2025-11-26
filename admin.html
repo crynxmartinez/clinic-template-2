@@ -1961,13 +1961,17 @@
         
         async function loadStaff() {
             try {
-                const [staffSnap, doctorsSnap] = await Promise.all([
+                const [staffSnap, allDoctorsSnap] = await Promise.all([
                     db.collection('users').where('role', '==', 'staff').where('clinicId', '==', CLINIC_ID).get(),
-                    db.collection('users').where('role', '==', 'doctor').where('clinicId', '==', CLINIC_ID).get()
+                    db.collection('users').where('role', '==', 'doctor').get()
                 ]);
                 
+                // Filter doctors by clinic (check both clinicId and clinicIds)
+                allDoctors = allDoctorsSnap.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(d => d.clinicId === CLINIC_ID || (d.clinicIds && d.clinicIds.includes(CLINIC_ID)));
+                
                 allStaff = staffSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                allDoctors = doctorsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
                 const grid = document.getElementById('staff-grid');
                 grid.innerHTML = allStaff.map(staff => {
@@ -2249,9 +2253,11 @@
                 const staffDoc = await db.collection('users').doc(staffId).get();
                 const staff = { id: staffDoc.id, ...staffDoc.data() };
                 
-                // Fetch all doctors for assignment (from THIS clinic)
-                const doctorsSnap = await db.collection('users').where('role', '==', 'doctor').where('clinicId', '==', CLINIC_ID).get();
-                const doctors = doctorsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Fetch all doctors for assignment (check both clinicId and clinicIds)
+                const allDoctorsSnap = await db.collection('users').where('role', '==', 'doctor').get();
+                const doctors = allDoctorsSnap.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(d => d.clinicId === CLINIC_ID || (d.clinicIds && d.clinicIds.includes(CLINIC_ID)));
                 
                 // Remove loading modal
                 loadingModal.remove();
@@ -2482,9 +2488,11 @@
         
         async function showReassignDoctorsModal(staffId, currentAssignments) {
             try {
-                // Fetch all doctors (from THIS clinic)
-                const doctorsSnap = await db.collection('users').where('role', '==', 'doctor').where('clinicId', '==', CLINIC_ID).get();
-                const doctors = doctorsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Fetch all doctors (check both clinicId and clinicIds)
+                const allDoctorsSnap = await db.collection('users').where('role', '==', 'doctor').get();
+                const doctors = allDoctorsSnap.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(d => d.clinicId === CLINIC_ID || (d.clinicIds && d.clinicIds.includes(CLINIC_ID)));
                 
                 const reassignModal = document.createElement('div');
                 reassignModal.id = 'reassign-modal';
@@ -3233,13 +3241,17 @@
         
         async function loadAppointments() {
             try {
-                const [appointmentsSnap, doctorsSnap] = await Promise.all([
+                const [appointmentsSnap, allDoctorsSnap] = await Promise.all([
                     db.collection('appointments').where('clinicId', '==', CLINIC_ID).get(),
-                    db.collection('users').where('role', '==', 'doctor').where('clinicId', '==', CLINIC_ID).get()
+                    db.collection('users').where('role', '==', 'doctor').get()
                 ]);
                 
                 allAppointments = appointmentsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                allDoctors = doctorsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                // Filter doctors by clinic (check both clinicId and clinicIds)
+                allDoctors = allDoctorsSnap.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(d => d.clinicId === CLINIC_ID || (d.clinicIds && d.clinicIds.includes(CLINIC_ID)));
                 
                 // Check and update expired appointments to 'missed'
                 await checkAndUpdateExpiredAppointments();
@@ -3623,13 +3635,16 @@
         async function loadAnalytics() {
             try {
                 // Fetch all appointments and doctors (from THIS clinic)
-                const [appointmentsSnap, doctorsSnap] = await Promise.all([
+                const [appointmentsSnap, allDoctorsSnap] = await Promise.all([
                     db.collection('appointments').where('clinicId', '==', CLINIC_ID).get(),
-                    db.collection('users').where('role', '==', 'doctor').where('clinicId', '==', CLINIC_ID).get()
+                    db.collection('users').where('role', '==', 'doctor').get()
                 ]);
                 
                 allAppointments = appointmentsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                allDoctors = doctorsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Filter doctors by clinic (check both clinicId and clinicIds)
+                allDoctors = allDoctorsSnap.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(d => d.clinicId === CLINIC_ID || (d.clinicIds && d.clinicIds.includes(CLINIC_ID)));
                 
                 // Check and update expired appointments to 'missed'
                 await checkAndUpdateExpiredAppointments();
@@ -3944,8 +3959,11 @@
                 
                 // Load doctors if not already loaded
                 if (allDoctors.length === 0) {
-                    const doctorsSnap = await db.collection('users').where('role', '==', 'doctor').where('clinicId', '==', CLINIC_ID).get();
-                    allDoctors = doctorsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    const allDoctorsSnap = await db.collection('users').where('role', '==', 'doctor').get();
+                    // Filter doctors by clinic (check both clinicId and clinicIds)
+                    allDoctors = allDoctorsSnap.docs
+                        .map(doc => ({ id: doc.id, ...doc.data() }))
+                        .filter(d => d.clinicId === CLINIC_ID || (d.clinicIds && d.clinicIds.includes(CLINIC_ID)));
                     
                     // Populate calendar doctor filter
                     const calendarDoctorFilter = document.getElementById('calendar-doctor-filter');
