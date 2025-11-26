@@ -533,8 +533,6 @@
         async function initializePage() {
             try {
                 assignedDoctors = currentUser.assignedDoctors || [];
-                console.log('🔍 Staff assignedDoctors:', assignedDoctors);
-                console.log('🔍 CLINIC_ID:', CLINIC_ID);
                 
                 if (assignedDoctors.length > 0) {
                     // Fetch assigned doctors (check both clinicId and clinicIds for multi-clinic support)
@@ -542,15 +540,11 @@
                         .where(firebase.firestore.FieldPath.documentId(), 'in', assignedDoctors)
                         .get();
                     
-                    console.log('🔍 Found doctors:', doctorsSnap.docs.length);
-                    
                     // Filter doctors that belong to THIS clinic (either clinicId or clinicIds)
                     doctorsSnap.docs.forEach(doc => {
                         const data = doc.data();
-                        console.log('🔍 Doctor:', doc.id, 'clinicId:', data.clinicId, 'clinicIds:', data.clinicIds);
                         const belongsToClinic = data.clinicId === CLINIC_ID || 
                             (data.clinicIds && data.clinicIds.includes(CLINIC_ID));
-                        console.log('🔍 belongsToClinic:', belongsToClinic);
                         if (belongsToClinic) {
                             allDoctorsMap[doc.id] = { id: doc.id, ...data };
                         }
