@@ -374,13 +374,16 @@
         // Load doctors for team section
         async function loadDoctors() {
             try {
+                // Load all active doctors, then filter by clinic (supports both clinicId and clinicIds)
                 const snapshot = await db.collection('users')
                     .where('role', '==', 'doctor')
-                    .where('clinicId', '==', CLINIC_ID)
                     .where('active', '==', true)
                     .get();
 
-                const doctors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Filter doctors that belong to THIS clinic (either clinicId or clinicIds)
+                const doctors = snapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(d => d.clinicId === CLINIC_ID || (d.clinicIds && d.clinicIds.includes(CLINIC_ID)));
                 
                 const grid = document.getElementById('doctors-grid');
                 

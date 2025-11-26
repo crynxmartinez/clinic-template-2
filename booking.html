@@ -458,14 +458,16 @@
         // Load doctors from Firebase (FILTERED BY CLINIC_ID)
         async function loadDoctors() {
             try {
-                // CRITICAL: Only load doctors from THIS clinic
+                // Load all active doctors, then filter by clinic (supports both clinicId and clinicIds)
                 const snapshot = await db.collection('users')
                     .where('role', '==', 'doctor')
-                    .where('clinicId', '==', CLINIC_ID)
                     .where('active', '==', true)
                     .get();
                 
-                allDoctors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Filter doctors that belong to THIS clinic (either clinicId or clinicIds)
+                allDoctors = snapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(d => d.clinicId === CLINIC_ID || (d.clinicIds && d.clinicIds.includes(CLINIC_ID)));
                 
                 console.log(`✅ Loaded ${allDoctors.length} doctors for clinic: ${CLINIC_NAME}`);
                 console.log('📋 Doctor data:', allDoctors);
