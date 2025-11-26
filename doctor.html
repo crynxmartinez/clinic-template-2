@@ -689,8 +689,10 @@
             try {
                 const userData = JSON.parse(currentUserStr);
                 
-                // CHECK: User belongs to THIS clinic
-                if (userData.clinicId !== CLINIC_ID) {
+                // CHECK: User belongs to THIS clinic (support both clinicId and clinicIds for multi-clinic doctors)
+                const belongsToClinic = userData.clinicId === CLINIC_ID || 
+                    (userData.clinicIds && userData.clinicIds.includes(CLINIC_ID));
+                if (!belongsToClinic) {
                     alert(`Access denied. You do not have access to ${CLINIC_NAME}`);
                     localStorage.removeItem('currentUser');
                     window.location.href = 'login.html';
