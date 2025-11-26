@@ -3947,7 +3947,8 @@
                     }
                 }
                 
-                let query = db.collection('appointments');
+                // Always filter by CLINIC_ID
+                let query = db.collection('appointments').where('clinicId', '==', CLINIC_ID);
                 
                 if (doctorFilter) {
                     query = query.where('doctorId', '==', doctorFilter);
