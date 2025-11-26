@@ -275,8 +275,10 @@
                     throw new Error('Incorrect password.');
                 }
                 
-                // CRITICAL: Check if user belongs to THIS clinic
-                if (userData.clinicId !== CLINIC_ID) {
+                // CRITICAL: Check if user belongs to THIS clinic (support both clinicId and clinicIds for multi-clinic users)
+                const belongsToClinic = userData.clinicId === CLINIC_ID || 
+                    (userData.clinicIds && userData.clinicIds.includes(CLINIC_ID));
+                if (!belongsToClinic) {
                     throw new Error(`Access denied. You do not have access to ${CLINIC_NAME}. Please login to your assigned clinic.`);
                 }
                 
