@@ -2766,7 +2766,10 @@
         
         async function loadGlobalServices() {
             try {
-                const snapshot = await db.collection('globalServices').get();
+                // Filter by CLINIC_ID - each clinic has its own services
+                const snapshot = await db.collection('globalServices')
+                    .where('clinicId', '==', CLINIC_ID)
+                    .get();
                 allGlobalServices = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
                 const grid = document.getElementById('global-services-grid');
@@ -3002,13 +3005,14 @@
                 try {
                     const serviceName = document.getElementById('gs-name').value.trim();
                     
-                    // Check for duplicate service name
+                    // Check for duplicate service name within THIS clinic only
                     const duplicateCheck = await db.collection('globalServices')
+                        .where('clinicId', '==', CLINIC_ID)
                         .where('name', '==', serviceName)
                         .get();
                     
                     if (!duplicateCheck.empty) {
-                        showToast('⚠️ Duplicate service already exists with this name!', 'error');
+                        showToast('⚠️ A service with this name already exists in this clinic!', 'error');
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = originalText;
                         return;
@@ -3017,6 +3021,8 @@
                     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
                     
                     const serviceData = {
+                        clinicId: CLINIC_ID,  // Associate service with this clinic
+                        clinicName: CLINIC_NAME,
                         name: serviceName,
                         category: document.getElementById('gs-category').value,
                         duration: parseInt(document.getElementById('gs-duration').value),
@@ -3024,7 +3030,7 @@
                         currency: document.getElementById('gs-currency').value,
                         description: document.getElementById('gs-description').value || '',
                         isActive: document.getElementById('gs-active').checked,
-                        createdBy: 'superadmin',
+                        createdBy: currentUser?.name || 'admin',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     };

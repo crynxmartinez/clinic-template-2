@@ -2025,7 +2025,11 @@
         
         async function loadGlobalServices() {
             try {
-                const snapshot = await db.collection('globalServices').where('isActive', '==', true).get();
+                // Filter by CLINIC_ID and isActive - doctors only see their clinic's active services
+                const snapshot = await db.collection('globalServices')
+                    .where('clinicId', '==', CLINIC_ID)
+                    .where('isActive', '==', true)
+                    .get();
                 allGlobalServices = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
                 displayGlobalServices(allGlobalServices);
