@@ -535,14 +535,19 @@
                 assignedDoctors = currentUser.assignedDoctors || [];
                 
                 if (assignedDoctors.length > 0) {
-                    // CRITICAL: Filter by CLINIC_ID when fetching assigned doctors
+                    // Fetch assigned doctors (check both clinicId and clinicIds for multi-clinic support)
                     const doctorsSnap = await db.collection('users')
                         .where(firebase.firestore.FieldPath.documentId(), 'in', assignedDoctors)
-                        .where('clinicId', '==', CLINIC_ID)
                         .get();
                     
+                    // Filter doctors that belong to THIS clinic (either clinicId or clinicIds)
                     doctorsSnap.docs.forEach(doc => {
-                        allDoctorsMap[doc.id] = { id: doc.id, ...doc.data() };
+                        const data = doc.data();
+                        const belongsToClinic = data.clinicId === CLINIC_ID || 
+                            (data.clinicIds && data.clinicIds.includes(CLINIC_ID));
+                        if (belongsToClinic) {
+                            allDoctorsMap[doc.id] = { id: doc.id, ...data };
+                        }
                     });
                     
                     const doctorFilter = document.getElementById('doctor-filter');
