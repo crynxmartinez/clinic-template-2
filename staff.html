@@ -887,29 +887,21 @@
                 const apt = { id: aptDoc.id, ...aptDoc.data() };
                 const doctor = allDoctorsMap[apt.doctorId];
                 
-                // Get service info if available
+                // Get service info from appointment data (stored directly in appointment)
                 let serviceInfo = '';
-                if (apt.serviceId) {
-                    try {
-                        const serviceDoc = await db.collection('services').doc(apt.serviceId).get();
-                        if (serviceDoc.exists) {
-                            const service = serviceDoc.data();
-                            const priceText = service.price ? `${service.currency || 'SAR'} ${service.price}` : 'Free';
-                            serviceInfo = `
-                                <div class="bg-blue-50 rounded-lg p-4 mb-4">
-                                    <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
-                                        <i class="fas fa-briefcase-medical text-primary mr-2"></i>Service Details
-                                    </h4>
-                                    <p class="text-sm text-gray-700"><strong>Service:</strong> ${service.name}</p>
-                                    <p class="text-sm text-gray-700"><strong>Category:</strong> ${service.category}</p>
-                                    <p class="text-sm text-gray-700"><strong>Duration:</strong> ${service.duration} minutes</p>
-                                    <p class="text-sm text-gray-700"><strong>Price:</strong> ${priceText}</p>
-                                </div>
-                            `;
-                        }
-                    } catch (error) {
-                        console.error('Error loading service:', error);
-                    }
+                if (apt.serviceName || apt.service) {
+                    const serviceName = apt.serviceName || apt.service || 'N/A';
+                    const priceText = apt.servicePrice ? `${apt.serviceCurrency || 'SAR'} ${apt.servicePrice}` : 'Free';
+                    serviceInfo = `
+                        <div class="bg-blue-50 rounded-lg p-4 mb-4">
+                            <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                                <i class="fas fa-briefcase-medical text-primary mr-2"></i>Service Details
+                            </h4>
+                            <p class="text-sm text-gray-700"><strong>Service:</strong> ${serviceName}</p>
+                            <p class="text-sm text-gray-700"><strong>Duration:</strong> ${apt.duration || 'N/A'} minutes</p>
+                            <p class="text-sm text-gray-700"><strong>Price:</strong> ${priceText}</p>
+                        </div>
+                    `;
                 }
                 
                 const modal = document.createElement('div');
