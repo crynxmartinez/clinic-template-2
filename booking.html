@@ -103,7 +103,7 @@
         <nav class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition">
-                    <i class="fas fa-eye text-primary text-3xl"></i>
+                    <i class="fas fa-tooth text-primary text-3xl"></i>
                     <div>
                         <h1 id="booking-clinic-name" class="text-2xl font-bold text-primary">Loading...</h1>
                     </div>
@@ -465,9 +465,29 @@
                     .get();
                 
                 // Filter doctors that belong to THIS clinic (either clinicId or clinicIds)
-                allDoctors = snapshot.docs
+                const filteredDoctors = snapshot.docs
                     .map(doc => ({ id: doc.id, ...doc.data() }))
                     .filter(d => d.clinicId === CLINIC_ID || (d.clinicIds && d.clinicIds.includes(CLINIC_ID)));
+                
+                // Load clinic-specific profiles for each doctor
+                allDoctors = await Promise.all(filteredDoctors.map(async (doctor) => {
+                    const profileId = `${doctor.id}_${CLINIC_ID}`;
+                    const profileDoc = await db.collection('doctorClinicProfiles').doc(profileId).get();
+                    
+                    if (profileDoc.exists) {
+                        const profile = profileDoc.data();
+                        // Merge clinic-specific data (schedule, services, etc.) with doctor info
+                        return {
+                            ...doctor,
+                            weeklySchedule: profile.weeklySchedule,
+                            appointmentDuration: profile.appointmentDuration,
+                            bufferTime: profile.bufferTime,
+                            offDates: profile.offDates,
+                            services: profile.services || []
+                        };
+                    }
+                    return doctor;
+                }));
                 
                 console.log(`✅ Loaded ${allDoctors.length} doctors for clinic: ${CLINIC_NAME}`);
                 console.log('📋 Doctor data:', allDoctors);
@@ -664,20 +684,11 @@
             try {
                 console.log('🔍 Loading services for user:', userId);
                 
-                // Debug: Check all services in database
-                const allServicesSnap = await db.collection('services').get();
-                console.log('📊 Total services in database:', allServicesSnap.size);
-                allServicesSnap.forEach(doc => {
-                    const data = doc.data();
-                    console.log(`   Service: ${data.name}, userId: ${data.userId}, active: ${data.isActive || data.active}`);
-                });
-                
-                const snapshot = await db.collection('services')
-                    .where('userId', '==', userId)
-                    .where('isActive', '==', true)
-                    .get();
-                
-                allServices = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Get services from the selected doctor's clinic-specific profile (already loaded)
+                const doctor = allDoctors.find(d => d.id === userId);
+                allServices = (doctor?.services || [])
+                    .filter(s => s.isActive !== false)
+                    .map((s, index) => ({ ...s, id: index.toString() })); // Use index as ID for array-based services
                 
                 console.log(`✅ Loaded ${allServices.length} services for doctor`);
                 console.log('📋 Services:', allServices);
@@ -688,14 +699,15 @@
                     // Clear existing options except the first one
                     serviceSelect.innerHTML = '<option value="">Choose a service...</option>';
                     
-                    allServices.forEach(service => {
+                    allServices.forEach((service, index) => {
                         const option = document.createElement('option');
-                        option.value = service.id;  // ✅ Store service ID instead of name
+                        option.value = index.toString();  // Use index as value
                         option.textContent = `${service.name} - ${service.duration} min - ${service.currency || 'SAR'} ${service.price || 'Free'}`;
                         option.dataset.duration = service.duration;
                         option.dataset.price = service.price;
+                        option.dataset.serviceName = service.name;
                         serviceSelect.appendChild(option);
-                        console.log('   ✅ Added service:', service.name, 'ID:', service.id);
+                        console.log('   ✅ Added service:', service.name, 'Index:', index);
                     });
                     
                     if (allServices.length === 0) {
