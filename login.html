@@ -294,6 +294,7 @@
                     name: userData.name,
                     role: userData.role,
                     clinicId: userData.clinicId,
+                    clinicIds: userData.clinicIds || [userData.clinicId], // For multi-clinic doctors
                     assignedDoctors: userData.assignedDoctors || [] // For staff portal
                 }));
                 
