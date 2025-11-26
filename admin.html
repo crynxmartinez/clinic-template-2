@@ -708,16 +708,24 @@
         
         async function loadDashboard() {
             try {
-                const [doctorsSnap, staffSnap, appointmentsSnap] = await Promise.all([
-                    db.collection('users').where('role', '==', 'doctor').where('clinicId', '==', CLINIC_ID).get(),
+                const [allDoctorsSnap, staffSnap, appointmentsSnap] = await Promise.all([
+                    db.collection('users').where('role', '==', 'doctor').get(),
                     db.collection('users').where('role', '==', 'staff').where('clinicId', '==', CLINIC_ID).get(),
                     db.collection('appointments').where('clinicId', '==', CLINIC_ID).get()
                 ]);
                 
+                // Filter doctors: check both clinicId (single) and clinicIds (array)
+                const clinicDoctors = allDoctorsSnap.docs.filter(doc => {
+                    const data = doc.data();
+                    if (data.clinicId === CLINIC_ID) return true;
+                    if (data.clinicIds && data.clinicIds.includes(CLINIC_ID)) return true;
+                    return false;
+                });
+                
                 const today = new Date().toISOString().split('T')[0];
                 const todayAppointments = appointmentsSnap.docs.filter(doc => doc.data().date === today);
                 
-                document.getElementById('stat-doctors').textContent = doctorsSnap.size;
+                document.getElementById('stat-doctors').textContent = clinicDoctors.length;
                 document.getElementById('stat-staff').textContent = staffSnap.size;
                 document.getElementById('stat-appointments').textContent = appointmentsSnap.size;
                 document.getElementById('stat-today').textContent = todayAppointments.length;
