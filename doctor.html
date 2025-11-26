@@ -863,6 +863,9 @@
                 if (doctorProfile) {
                     loadAvailability();
                 }
+            } else if (section === 'patients') {
+                // Patient database is already loaded on page init
+                // Just show the section
             }
         }
         
@@ -1401,7 +1404,7 @@
                                                 <p class="font-semibold">${note.author || 'Doctor'} - ${note.timestamp ? new Date(note.timestamp).toLocaleString() : ''}</p>
                                                 <p>${note.text}</p>
                                             </div>
-                                        `).join('')} : '<p class="text-gray-500 text-sm">No notes yet</p>'}
+                                        `).join('') : '<p class="text-gray-500 text-sm">No notes yet</p>'}
                                     </div>
                                 </div>
                             ` : ''}
