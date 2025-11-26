@@ -1330,7 +1330,7 @@
                         <input type="text" id="verify-doctor-uid" placeholder="Enter UID provided by the doctor" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
                     </div>
                     
-                    <button onclick="verifyAndAddDoctor('${doctor.id}', '${email}')" class="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold">
+                    <button id="verify-add-btn" onclick="verifyAndAddDoctor('${doctor.id}', '${email}')" class="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold">
                         <i class="fas fa-check mr-2"></i>Verify UID & Add to Clinic
                     </button>
                 `;
@@ -1432,6 +1432,13 @@
                 return;
             }
             
+            // Show loading spinner on button
+            const btn = document.getElementById('verify-add-btn');
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Adding...';
+                btn.disabled = true;
+            }
+            
             // UID verified! Add to clinic
             await addDoctorToClinic(doctorId);
         }
@@ -1460,7 +1467,7 @@
                     doctorName: doctor.name,
                     clinicId: CLINIC_ID,
                     clinicName: CLINIC_NAME,
-                    addedBy: auth.currentUser ? auth.currentUser.uid : 'admin',
+                    addedBy: currentUser ? currentUser.odooId || currentUser.id : 'admin',
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
