@@ -4,8 +4,8 @@
 // 
 // IMPORTANT: Change these values for each clinic deployment
 
-const CLINIC_ID = 'clinic1';              // MUST match the clinicId in Firebase
-const CLINIC_NAME = 'Zamboanga Dental Clinic';   // Display name for the clinic
+const CLINIC_ID = 'clinic2';              // MUST match the clinicId in Firebase
+const CLINIC_NAME = 'Basilan Eye Center';   // Display name for the clinic
 
 // CLINIC BRANDING (Optional)
 const CLINIC_LOGO = 'assets/logo.png';
@@ -14,9 +14,9 @@ const CLINIC_SECONDARY_COLOR = '#00cc66';
 
 // CLINIC CONTACT (Optional - for homepage)
 const CLINIC_CONTACT = {
-    phone: '+63 917 123 4567',
-    email: 'info@zamboangadental.com',
-    address: '123 Dental Street, Zamboanga City, Philippines'
+    phone: '+63 917 345 6789',
+    email: 'info@basilaneye.com',
+    address: '456 Vision Avenue, Isabela City, Basilan, Philippines'
 };
 
 // ========================================

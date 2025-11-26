@@ -1,19 +1,25 @@
-# 🏥 CLINIC TEMPLATE
+# 👁️ Basilan Eye Center
 
-This is a reusable template for deploying individual clinic websites with complete data isolation.
+**Clinic ID:** `clinic2`  
+**Location:** Isabela City, Basilan, Philippines  
+**Type:** Eye Clinic / Optometry  
+**Platform:** MyMedPH
 
-## 📋 **QUICK START**
+## 📋 **CLINIC INFO**
 
-### **1. Copy Template**
-```bash
-cp -r clinic-template my-clinic-name/
-```
+| Field | Value |
+|-------|-------|
+| Clinic Name | Basilan Eye Center |
+| Phone | +63 917 345 6789 |
+| Email | info@basilaneye.com |
+| Address | 456 Vision Avenue, Isabela City, Basilan, Philippines |
 
-### **2. Configure Clinic**
-Edit `config.js`:
+## 🔧 **CONFIGURATION**
+
+Edit `config.js` to update clinic details:
 ```javascript
-const CLINIC_ID = 'my-clinic-id';        // Must match Firebase clinic ID
-const CLINIC_NAME = 'My Clinic Name';    // Display name
+const CLINIC_ID = 'clinic2';
+const CLINIC_NAME = 'Basilan Eye Center';
 ```
 
 ### **3. Customize Branding** (Optional)
