@@ -3076,7 +3076,7 @@
                 const select = document.getElementById('transfer-new-doctor');
                 select.innerHTML = '<option value="">Select a doctor...</option>';
                 
-                // Get ALL active doctors
+                // Get active doctors from THIS clinic only
                 const doctorsSnap = await db.collection('users')
                     .where('role', '==', 'doctor')
                     .where('active', '==', true)
@@ -3084,12 +3084,17 @@
                 
                 let count = 0;
                 doctorsSnap.docs.forEach(doc => {
-                    // Exclude current doctor
-                    if (doc.id !== currentDoctorId) {
-                        const doctor = doc.data();
+                    const doctor = doc.data();
+                    
+                    // Check if doctor belongs to THIS clinic (check both clinicId and clinicIds)
+                    const belongsToClinic = doctor.clinicId === CLINIC_ID || 
+                        (doctor.clinicIds && doctor.clinicIds.includes(CLINIC_ID));
+                    
+                    // Exclude current doctor and doctors not in this clinic
+                    if (doc.id !== currentDoctorId && belongsToClinic) {
                         const option = document.createElement('option');
                         option.value = doc.id;
-                        option.textContent = doctor.name;
+                        option.textContent = `${doctor.name}${doctor.specialty ? ' - ' + doctor.specialty : ''}`;
                         option.dataset.email = doctor.email;
                         select.appendChild(option);
                         count++;
@@ -3097,8 +3102,8 @@
                 });
                 
                 if (count === 0) {
-                    select.innerHTML = '<option value="">No other doctors available</option>';
-                    showToast('No other doctors available to transfer to', 'warning');
+                    select.innerHTML = '<option value="">No other doctors available in this clinic</option>';
+                    showToast('No other doctors available in this clinic to transfer to', 'warning');
                 }
                 
             } catch (error) {
