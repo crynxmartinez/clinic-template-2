@@ -9,8 +9,8 @@ const CLINIC_NAME = 'Basilan Eye Center';   // Display name for the clinic
 
 // CLINIC BRANDING (Optional)
 const CLINIC_LOGO = 'assets/logo.png';
-const CLINIC_PRIMARY_COLOR = '#0066cc';
-const CLINIC_SECONDARY_COLOR = '#00cc66';
+const CLINIC_PRIMARY_COLOR = '#7c3aed'; // Purple
+const CLINIC_SECONDARY_COLOR = '#ec4899'; // Pink
 
 // CLINIC CONTACT (Optional - for homepage)
 const CLINIC_CONTACT = {

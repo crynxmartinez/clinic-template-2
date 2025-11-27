@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,56 +10,111 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#0066cc',
-                        secondary: '#00cc66',
+                        primary: '#7c3aed',
+                        secondary: '#ec4899',
+                        dark: '#1e1b4b',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
+        body { font-family: 'Inter', sans-serif; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
-        .hero-gradient {
-            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(124, 58, 237, 0.6); }
         }
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        .float { animation: float 6s ease-in-out infinite; }
+        .pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+        .hero-bg {
+            background: linear-gradient(135deg, #0f0a1e 0%, #1e1b4b 50%, #312e81 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .card-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-8px); }
+        .gradient-text { background: linear-gradient(135deg, #ec4899, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-slate-50 antialiased">
     <!-- Navigation -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
+    <nav class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50 border-b border-purple-100/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="index.html" class="flex items-center space-x-3 hover:opacity-80 transition">
-                    <i class="fas fa-eye text-primary text-3xl"></i>
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex items-center space-x-3 group">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40 transition-all duration-300 group-hover:scale-105">
+                        <i class="fas fa-eye text-white text-xl"></i>
+                    </div>
                     <div>
-                        <h1 id="nav-clinic-name" class="text-xl font-bold text-gray-800">Loading...</h1>
-                        <p class="text-xs text-gray-600">Vision Excellence</p>
+                        <h1 id="nav-clinic-name" class="text-xl font-bold text-gray-900">Loading...</h1>
+                        <p class="text-xs text-purple-600 font-semibold tracking-wider uppercase">Vision Excellence</p>
                     </div>
                 </a>
-                <div class="hidden md:flex space-x-6">
-                    <a href="#home" class="text-gray-700 hover:text-primary transition">Home</a>
-                    <a href="#about" class="text-gray-700 hover:text-primary transition">About</a>
-                    <a href="#services" class="text-gray-700 hover:text-primary transition">Services</a>
-                    <a href="#team" class="text-gray-700 hover:text-primary transition">Our Team</a>
-                    <a href="#contact" class="text-gray-700 hover:text-primary transition">Contact</a>
-                </div>
-                <div class="flex space-x-3">
-                    <a href="booking.html" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-semibold">
-                        <i class="fas fa-calendar-check mr-2"></i>Book Now
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-600 hover:text-primary font-medium transition-colors relative group">
+                        Home
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-secondary group-hover:w-full transition-all duration-300"></span>
                     </a>
-                    <a href="login.html" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Staff Login
+                    <a href="#about" class="text-gray-600 hover:text-primary font-medium transition-colors relative group">
+                        About
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-secondary group-hover:w-full transition-all duration-300"></span>
+                    </a>
+                    <a href="#services" class="text-gray-600 hover:text-primary font-medium transition-colors relative group">
+                        Services
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-secondary group-hover:w-full transition-all duration-300"></span>
+                    </a>
+                    <a href="#team" class="text-gray-600 hover:text-primary font-medium transition-colors relative group">
+                        Specialists
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-secondary group-hover:w-full transition-all duration-300"></span>
+                    </a>
+                    <a href="#contact" class="text-gray-600 hover:text-primary font-medium transition-colors relative group">
+                        Contact
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-secondary group-hover:w-full transition-all duration-300"></span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="login.html" class="text-gray-600 hover:text-primary font-medium transition-colors hidden md:block">Staff</a>
+                    <a href="booking.html" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2.5 rounded-full font-semibold shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105 transition-all duration-300">
+                        <i class="fas fa-calendar-check mr-2"></i>Book Now
                     </a>
                 </div>
             </div>
@@ -67,245 +122,263 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero-gradient text-white min-h-screen flex items-center justify-center fade-in">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 id="hero-clinic-name" class="text-5xl md:text-6xl font-bold mb-6">Welcome to Our Clinic</h1>
-            <p class="text-xl md:text-2xl mb-8 text-blue-100">Your Vision, Our Mission</p>
-            <p class="text-lg mb-10 max-w-2xl mx-auto text-blue-50">
-                Experience world-class eye care with our expert team. We're committed to providing you with the best vision treatment in a comfortable environment.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="booking.html" class="bg-white text-primary px-8 py-4 rounded-lg hover:bg-gray-100 transition font-bold text-lg shadow-lg">
-                    <i class="fas fa-calendar-plus mr-2"></i>Schedule Appointment
-                </a>
-                <a href="#contact" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-primary transition font-bold text-lg">
-                    <i class="fas fa-phone mr-2"></i>Contact Us
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="min-h-screen flex items-center bg-white fade-in py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">About <span id="about-clinic-name">Our Clinic</span></h2>
-                <div class="w-24 h-1 bg-primary mx-auto"></div>
-            </div>
-            <div class="grid md:grid-cols-2 gap-12 items-center">
+    <section id="home" class="hero-bg text-white min-h-screen flex items-center fade-in relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
                 <div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Excellence in Eye Care</h3>
-                    <p class="text-gray-600 mb-4 leading-relaxed">
-                        We are dedicated to providing exceptional eye care to our community. Our state-of-the-art facility and experienced team ensure that you receive the highest quality vision treatment.
+                    <div class="inline-flex items-center px-4 py-2 rounded-full glass text-purple-300 text-sm font-medium mb-8">
+                        <i class="fas fa-sparkles mr-2 text-pink-400"></i>
+                        Advanced Vision Technology
+                    </div>
+                    <h1 class="text-5xl lg:text-7xl font-extrabold mb-6 leading-tight">
+                        See Life in<br/>
+                        <span class="gradient-text">Perfect Clarity</span>
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-10 leading-relaxed max-w-lg">
+                        Experience world-class eye care with cutting-edge technology and compassionate specialists dedicated to preserving your precious gift of sight.
                     </p>
-                    <p class="text-gray-600 mb-4 leading-relaxed">
-                        With years of experience and a commitment to continuing education, our eye specialists stay at the forefront of ophthalmology technology and techniques.
-                    </p>
-                    <div class="grid grid-cols-2 gap-4 mt-6">
-                        <div class="text-center p-4 bg-blue-50 rounded-lg">
-                            <i class="fas fa-users text-primary text-3xl mb-2"></i>
-                            <p class="font-bold text-2xl text-gray-800">1000+</p>
-                            <p class="text-gray-600 text-sm">Happy Patients</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="booking.html" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 hover:scale-105 transition-all duration-300 text-center">
+                            <i class="fas fa-calendar-plus mr-2"></i>Schedule Visit
+                        </a>
+                        <a href="#services" class="glass text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/10 transition-all duration-300 text-center">
+                            <i class="fas fa-eye mr-2"></i>Our Services
+                        </a>
+                    </div>
+                    <div class="mt-12 flex items-center gap-8">
+                        <div class="text-center">
+                            <p class="text-3xl font-bold text-white">15k+</p>
+                            <p class="text-purple-300 text-sm">Procedures</p>
                         </div>
-                        <div class="text-center p-4 bg-blue-50 rounded-lg">
-                            <i class="fas fa-award text-primary text-3xl mb-2"></i>
-                            <p class="font-bold text-2xl text-gray-800">10+</p>
-                            <p class="text-gray-600 text-sm">Years Experience</p>
+                        <div class="w-px h-12 bg-purple-500/30"></div>
+                        <div class="text-center">
+                            <p class="text-3xl font-bold text-white">99%</p>
+                            <p class="text-purple-300 text-sm">Success Rate</p>
+                        </div>
+                        <div class="w-px h-12 bg-purple-500/30"></div>
+                        <div class="text-center">
+                            <p class="text-3xl font-bold text-white">20+</p>
+                            <p class="text-purple-300 text-sm">Years</p>
                         </div>
                     </div>
                 </div>
-                <div class="bg-gradient-to-br from-blue-100 to-blue-50 p-8 rounded-2xl">
-                    <h4 class="text-xl font-bold text-gray-800 mb-4">Why Choose Us?</h4>
-                    <ul class="space-y-3">
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-primary mt-1 mr-3"></i>
-                            <span class="text-gray-700">Experienced and caring eye care professionals</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-primary mt-1 mr-3"></i>
-                            <span class="text-gray-700">State-of-the-art equipment and technology</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-primary mt-1 mr-3"></i>
-                            <span class="text-gray-700">Comfortable and welcoming environment</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-primary mt-1 mr-3"></i>
-                            <span class="text-gray-700">Flexible scheduling and emergency care</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-primary mt-1 mr-3"></i>
-                            <span class="text-gray-700">Comprehensive eye care services</span>
-                        </li>
-                    </ul>
+                <div class="hidden lg:flex items-center justify-center relative">
+                    <div class="relative">
+                        <div class="w-80 h-80 rounded-full border-[3px] border-purple-500/20 flex items-center justify-center float">
+                            <div class="w-60 h-60 rounded-full border-[3px] border-pink-500/20 flex items-center justify-center">
+                                <div class="w-40 h-40 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center pulse-glow">
+                                    <i class="fas fa-eye text-white text-5xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
+                            <i class="fas fa-glasses text-white text-2xl"></i>
+                        </div>
+                        <div class="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl">
+                            <i class="fas fa-microscope text-white text-xl"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="min-h-screen flex items-center bg-gray-50 fade-in py-16">
+    <section id="services" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">Our Services</h2>
-                <div class="w-24 h-1 bg-primary mx-auto mb-4"></div>
-                <p class="text-gray-600 max-w-2xl mx-auto">
-                    We offer a comprehensive range of eye care services to meet all your vision health needs.
-                </p>
+            <div class="text-center mb-16">
+                <span class="text-primary font-semibold text-sm uppercase tracking-wider">What We Offer</span>
+                <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mt-2 mb-4">Specialized Eye Care</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
             </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Service 1 -->
-                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
-                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-eye text-primary text-2xl"></i>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-xl shadow-purple-100/50 border border-gray-100 card-hover group">
+                    <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                        <i class="fas fa-glasses text-primary text-2xl group-hover:text-white transition-colors"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Eye Examination</h3>
-                    <p class="text-gray-600">
-                        Comprehensive eye exams, vision testing, and preventive care to keep your eyes healthy.
-                    </p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">LASIK Surgery</h3>
+                    <p class="text-gray-600 leading-relaxed">Advanced laser vision correction for freedom from glasses and contacts.</p>
                 </div>
-                <!-- Service 2 -->
-                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
-                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-glasses text-primary text-2xl"></i>
+                <div class="bg-white p-8 rounded-3xl shadow-xl shadow-purple-100/50 border border-gray-100 card-hover group">
+                    <div class="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:scale-110 transition-all duration-300">
+                        <i class="fas fa-eye text-secondary text-2xl group-hover:text-white transition-colors"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Eyeglasses & Frames</h3>
-                    <p class="text-gray-600">
-                        Wide selection of stylish frames and prescription lenses to match your style.
-                    </p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Cataract Surgery</h3>
+                    <p class="text-gray-600 leading-relaxed">Micro-incision surgery with premium lens implants for crystal clear vision.</p>
                 </div>
-                <!-- Service 3 -->
-                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
-                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-circle text-primary text-2xl"></i>
+                <div class="bg-white p-8 rounded-3xl shadow-xl shadow-purple-100/50 border border-gray-100 card-hover group">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-600 group-hover:scale-110 transition-all duration-300">
+                        <i class="fas fa-child text-indigo-600 text-2xl group-hover:text-white transition-colors"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Contact Lenses</h3>
-                    <p class="text-gray-600">
-                        Daily, weekly, and monthly contact lenses with professional fitting services.
-                    </p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Pediatric Eye Care</h3>
+                    <p class="text-gray-600 leading-relaxed">Specialized care for children's vision health and development.</p>
                 </div>
-                <!-- Service 4 -->
-                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
-                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-procedures text-primary text-2xl"></i>
+                <div class="bg-white p-8 rounded-3xl shadow-xl shadow-purple-100/50 border border-gray-100 card-hover group">
+                    <div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-teal-600 group-hover:scale-110 transition-all duration-300">
+                        <i class="fas fa-search-plus text-teal-600 text-2xl group-hover:text-white transition-colors"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Cataract Surgery</h3>
-                    <p class="text-gray-600">
-                        Advanced cataract removal and lens implant procedures for clearer vision.
-                    </p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Glaucoma Treatment</h3>
+                    <p class="text-gray-600 leading-relaxed">Early detection and advanced treatment to protect your optic nerve.</p>
                 </div>
-                <!-- Service 5 -->
-                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
-                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-child text-primary text-2xl"></i>
+                <div class="bg-white p-8 rounded-3xl shadow-xl shadow-purple-100/50 border border-gray-100 card-hover group">
+                    <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-orange-500 group-hover:scale-110 transition-all duration-300">
+                        <i class="fas fa-microscope text-orange-500 text-2xl group-hover:text-white transition-colors"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Pediatric Eye Care</h3>
-                    <p class="text-gray-600">
-                        Specialized vision care for children in a friendly and comfortable environment.
-                    </p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Retina Services</h3>
+                    <p class="text-gray-600 leading-relaxed">Expert diagnosis and treatment for macular degeneration and diabetic retinopathy.</p>
                 </div>
-                <!-- Service 6 -->
-                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
-                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-ambulance text-primary text-2xl"></i>
+                <div class="bg-white p-8 rounded-3xl shadow-xl shadow-purple-100/50 border border-gray-100 card-hover group">
+                    <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:scale-110 transition-all duration-300">
+                        <i class="fas fa-store text-blue-600 text-2xl group-hover:text-white transition-colors"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Emergency Eye Care</h3>
-                    <p class="text-gray-600">
-                        Immediate attention for eye emergencies and urgent vision care needs.
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Optical Boutique</h3>
+                    <p class="text-gray-600 leading-relaxed">Designer frames and premium lenses tailored to your style.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-gradient-to-br from-slate-50 to-purple-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">About Us</span>
+                    <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mt-2 mb-6">Why Choose <span id="about-clinic-name" class="gradient-text">Us</span>?</h2>
+                    <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                        We combine decades of expertise with the latest technology to deliver exceptional eye care that transforms lives.
                     </p>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-award text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-1">Board Certified Specialists</h4>
+                                <p class="text-gray-600">Our ophthalmologists are leaders in their fields.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-microchip text-secondary text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-1">Cutting-Edge Technology</h4>
+                                <p class="text-gray-600">Latest diagnostic and surgical equipment available.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-heart text-indigo-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-1">Compassionate Care</h4>
+                                <p class="text-gray-600">Patient comfort and satisfaction is our priority.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="bg-white p-8 rounded-3xl shadow-xl text-center transform translate-y-8">
+                        <p class="text-5xl font-bold gradient-text mb-2">15k+</p>
+                        <p class="text-gray-600 font-medium">Successful Surgeries</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-3xl shadow-xl text-center">
+                        <p class="text-5xl font-bold gradient-text mb-2">99%</p>
+                        <p class="text-gray-600 font-medium">Patient Satisfaction</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-3xl shadow-xl text-center">
+                        <p class="text-5xl font-bold gradient-text mb-2">24/7</p>
+                        <p class="text-gray-600 font-medium">Emergency Care</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-3xl shadow-xl text-center transform translate-y-8">
+                        <p class="text-5xl font-bold gradient-text mb-2">20+</p>
+                        <p class="text-gray-600 font-medium">Years Experience</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Team Section -->
-    <section id="team" class="min-h-screen flex items-center bg-white fade-in py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">Meet Our Team</h2>
-                <div class="w-24 h-1 bg-primary mx-auto mb-4"></div>
-                <p class="text-gray-600 max-w-2xl mx-auto">
-                    Our experienced and caring eye care professionals are here to serve you.
-                </p>
+    <section id="team" class="py-24 bg-gradient-to-br from-slate-900 to-purple-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-20 left-20 w-72 h-72 bg-purple-500 rounded-full filter blur-3xl"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-pink-500 rounded-full filter blur-3xl"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <span class="text-purple-400 font-semibold text-sm uppercase tracking-wider">Our Experts</span>
+                <h2 class="text-4xl lg:text-5xl font-bold mt-2 mb-4">Vision Specialists</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-pink-500 to-purple-500 mx-auto rounded-full"></div>
             </div>
-            <div id="doctors-grid" class="grid md:grid-cols-3 gap-8">
-                <!-- Doctors will be loaded here -->
-                <div class="text-center text-gray-500">
-                    <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
-                    <p>Loading our team...</p>
+            <div id="doctors-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="col-span-full text-center py-12">
+                    <i class="fas fa-circle-notch fa-spin text-4xl text-purple-400 mb-4"></i>
+                    <p class="text-purple-300">Loading specialists...</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="min-h-screen flex items-center bg-gradient-to-br from-blue-50 to-white fade-in py-16">
+    <section id="contact" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">Contact Us</h2>
-                <div class="w-24 h-1 bg-primary mx-auto"></div>
-            </div>
-            <div class="grid md:grid-cols-2 gap-12">
+            <div class="grid lg:grid-cols-2 gap-16">
                 <div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Get In Touch</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-primary text-xl mt-1 mr-4"></i>
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Get In Touch</span>
+                    <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mt-2 mb-6">Contact Us</h2>
+                    <p class="text-xl text-gray-600 mb-10">Have questions about your eye health? We're here to help.</p>
+                    <div class="space-y-8">
+                        <div class="flex items-start gap-5">
+                            <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-map-marker-alt text-primary text-xl"></i>
+                            </div>
                             <div>
-                                <p class="font-semibold text-gray-800">Address</p>
+                                <h4 class="font-bold text-gray-900 mb-1">Visit Us</h4>
                                 <p id="contact-address" class="text-gray-600">Loading...</p>
                             </div>
                         </div>
-                        <div class="flex items-start">
-                            <i class="fas fa-phone text-primary text-xl mt-1 mr-4"></i>
+                        <div class="flex items-start gap-5">
+                            <div class="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-phone text-secondary text-xl"></i>
+                            </div>
                             <div>
-                                <p class="font-semibold text-gray-800">Phone</p>
+                                <h4 class="font-bold text-gray-900 mb-1">Call Us</h4>
                                 <p id="contact-phone" class="text-gray-600">Loading...</p>
                             </div>
                         </div>
-                        <div class="flex items-start">
-                            <i class="fas fa-envelope text-primary text-xl mt-1 mr-4"></i>
+                        <div class="flex items-start gap-5">
+                            <div class="w-14 h-14 bg-indigo-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-envelope text-indigo-600 text-xl"></i>
+                            </div>
                             <div>
-                                <p class="font-semibold text-gray-800">Email</p>
+                                <h4 class="font-bold text-gray-900 mb-1">Email Us</h4>
                                 <p id="contact-email" class="text-gray-600">Loading...</p>
                             </div>
                         </div>
-                        <div class="flex items-start">
-                            <i class="fas fa-clock text-primary text-xl mt-1 mr-4"></i>
+                        <div class="flex items-start gap-5">
+                            <div class="w-14 h-14 bg-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-clock text-teal-600 text-xl"></i>
+                            </div>
                             <div>
-                                <p class="font-semibold text-gray-800">Hours</p>
-                                <p class="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                                <p class="text-gray-600">Saturday: 9:00 AM - 2:00 PM</p>
-                                <p class="text-gray-600">Sunday: Closed</p>
+                                <h4 class="font-bold text-gray-900 mb-1">Hours</h4>
+                                <p class="text-gray-600">Mon-Fri: 9AM-6PM | Sat: 9AM-2PM</p>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-8">
-                        <a href="booking.html" class="bg-primary text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition font-bold inline-block">
-                            <i class="fas fa-calendar-check mr-2"></i>Book an Appointment
-                        </a>
-                    </div>
                 </div>
-                <div class="bg-white p-8 rounded-xl shadow-lg">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Send Us a Message</h3>
-                    <form id="contact-form" class="space-y-4">
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Name</label>
-                            <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Your Name">
+                <div class="bg-gradient-to-br from-slate-50 to-purple-50 p-10 rounded-3xl">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Send a Message</h3>
+                    <form id="contact-form" class="space-y-5">
+                        <div class="grid grid-cols-2 gap-5">
+                            <input type="text" placeholder="First Name" class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-purple-200 outline-none transition">
+                            <input type="text" placeholder="Last Name" class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-purple-200 outline-none transition">
                         </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                            <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="your@email.com">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Phone</label>
-                            <input type="tel" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Your Phone">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Message</label>
-                            <textarea rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="How can we help you?"></textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-bold">
+                        <input type="email" placeholder="Email Address" class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-purple-200 outline-none transition">
+                        <input type="tel" placeholder="Phone Number" class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-purple-200 outline-none transition">
+                        <textarea rows="4" placeholder="Your Message" class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-purple-200 outline-none transition resize-none"></textarea>
+                        <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 rounded-xl shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.02] transition-all duration-300">
                             <i class="fas fa-paper-plane mr-2"></i>Send Message
                         </button>
                     </form>
@@ -315,29 +388,60 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="flex items-center justify-center space-x-3 mb-4">
-                <i class="fas fa-eye text-primary text-2xl"></i>
-                <h3 id="footer-clinic-name" class="text-xl font-bold">Clinic Name</h3>
+    <footer class="bg-slate-900 text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
+                            <i class="fas fa-eye text-white"></i>
+                        </div>
+                        <h3 id="footer-clinic-name" class="text-xl font-bold">Clinic</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Dedicated to preserving and restoring your vision through advanced technology and compassionate care.</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-primary transition-colors"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-secondary transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-blue-500 transition-colors"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6">Quick Links</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#about" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#services" class="hover:text-white transition-colors">Services</a></li>
+                        <li><a href="#team" class="hover:text-white transition-colors">Our Team</a></li>
+                        <li><a href="booking.html" class="hover:text-white transition-colors">Book Appointment</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6">Services</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">LASIK Surgery</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Cataract Removal</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Glaucoma Care</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Eye Exams</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6">Hours</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li class="flex justify-between"><span>Mon - Fri</span><span>9:00 - 18:00</span></li>
+                        <li class="flex justify-between"><span>Saturday</span><span>9:00 - 14:00</span></li>
+                        <li class="flex justify-between"><span>Sunday</span><span>Closed</span></li>
+                    </ul>
+                </div>
             </div>
-            <p class="text-gray-400 mb-4">Your Vision, Our Mission</p>
-            <div class="flex justify-center space-x-6 mb-4">
-                <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-facebook text-2xl"></i></a>
-                <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-instagram text-2xl"></i></a>
-                <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-twitter text-2xl"></i></a>
+            <div class="border-t border-white/10 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2024 <span id="copyright-clinic-name">Clinic</span>. All rights reserved. Powered by <span class="text-primary font-semibold">MyMedPH</span></p>
             </div>
-            <p class="text-gray-500 text-sm mb-2">&copy; 2024 <span id="copyright-clinic-name">Clinic</span>. All rights reserved.</p>
-            <p class="text-gray-600 text-xs">Powered by <span class="text-primary font-semibold">MyMedPH</span></p>
         </div>
     </footer>
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-
     <script>
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCjJLE_Mgrv3HONhkkgApmUNVlGdnAIcvI",
             authDomain: "clinic-a17bc.firebaseapp.com",
@@ -350,86 +454,63 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Set clinic name from config
-        document.getElementById('page-title').textContent = `${CLINIC_NAME} - Welcome`;
+        // Set content from config
+        document.getElementById('page-title').textContent = CLINIC_NAME + ' - Vision Care';
         document.getElementById('nav-clinic-name').textContent = CLINIC_NAME;
-        document.getElementById('hero-clinic-name').textContent = `Welcome to ${CLINIC_NAME}`;
         document.getElementById('about-clinic-name').textContent = CLINIC_NAME;
         document.getElementById('footer-clinic-name').textContent = CLINIC_NAME;
         document.getElementById('copyright-clinic-name').textContent = CLINIC_NAME;
 
-        // Set contact info from config
         if (CLINIC_CONTACT) {
-            if (CLINIC_CONTACT.address) {
-                document.getElementById('contact-address').textContent = CLINIC_CONTACT.address;
-            }
-            if (CLINIC_CONTACT.phone) {
-                document.getElementById('contact-phone').textContent = CLINIC_CONTACT.phone;
-            }
-            if (CLINIC_CONTACT.email) {
-                document.getElementById('contact-email').textContent = CLINIC_CONTACT.email;
-            }
+            document.getElementById('contact-address').textContent = CLINIC_CONTACT.address || '';
+            document.getElementById('contact-phone').textContent = CLINIC_CONTACT.phone || '';
+            document.getElementById('contact-email').textContent = CLINIC_CONTACT.email || '';
         }
 
-        // Load doctors for team section
         async function loadDoctors() {
             try {
-                // Load all active doctors, then filter by clinic (supports both clinicId and clinicIds)
-                const snapshot = await db.collection('users')
-                    .where('role', '==', 'doctor')
-                    .where('active', '==', true)
-                    .get();
-
-                // Filter doctors that belong to THIS clinic (either clinicId or clinicIds)
-                const doctors = snapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() }))
-                    .filter(d => d.clinicId === CLINIC_ID || (d.clinicIds && d.clinicIds.includes(CLINIC_ID)));
-                
+                const snapshot = await db.collection('users').where('role', '==', 'doctor').where('active', '==', true).get();
+                const doctors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(d => d.clinicId === CLINIC_ID || (d.clinicIds && d.clinicIds.includes(CLINIC_ID)));
                 const grid = document.getElementById('doctors-grid');
-                
                 if (doctors.length === 0) {
-                    grid.innerHTML = '<div class="col-span-3 text-center text-gray-500"><p>Our team information will be available soon.</p></div>';
+                    grid.innerHTML = '<div class="col-span-full text-center text-purple-300"><p>Our specialists will be listed here soon.</p></div>';
                     return;
                 }
-
-                grid.innerHTML = doctors.map(doctor => `
-                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition text-center">
-                        <div class="w-24 h-24 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                            <i class="fas fa-user-md text-white text-3xl"></i>
+                grid.innerHTML = doctors.map(doc => `
+                    <div class="bg-white/5 backdrop-blur-sm p-8 rounded-3xl border border-white/10 hover:border-purple-500/50 transition-all duration-300 text-center group">
+                        <div class="w-28 h-28 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary to-secondary p-1">
+                            <div class="w-full h-full rounded-full bg-slate-800 flex items-center justify-center">
+                                <i class="fas fa-user-md text-white text-3xl"></i>
+                            </div>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">${doctor.name || 'Doctor'}</h3>
-                        <p class="text-primary font-semibold mb-3">${doctor.specialty || 'Ophthalmologist'}</p>
-                        <p class="text-gray-600 text-sm mb-4">${doctor.bio || 'Dedicated to providing excellent eye care.'}</p>
-                        <a href="booking.html" class="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-                            <i class="fas fa-calendar-check mr-2"></i>Book Appointment
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">${doc.name || 'Specialist'}</h3>
+                        <p class="text-purple-400 font-medium text-sm uppercase tracking-wide mb-4">${doc.specialty || 'Ophthalmologist'}</p>
+                        <p class="text-gray-400 text-sm mb-6">${doc.bio || 'Dedicated to excellence in vision care.'}</p>
+                        <a href="booking.html" class="inline-block text-white font-semibold hover:text-pink-400 transition-colors">
+                            Book Consultation <i class="fas fa-arrow-right ml-2 text-xs"></i>
                         </a>
                     </div>
                 `).join('');
             } catch (error) {
-                console.error('Error loading doctors:', error);
-                document.getElementById('doctors-grid').innerHTML = '<div class="col-span-3 text-center text-gray-500"><p>Unable to load team information.</p></div>';
+                console.error('Error:', error);
+                document.getElementById('doctors-grid').innerHTML = '<div class="col-span-full text-center text-purple-300"><p>Unable to load specialists.</p></div>';
             }
         }
 
-        // Contact form submission
         document.getElementById('contact-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            alert('Thank you for your message! We will get back to you soon.');
+            alert('Thank you! We will contact you shortly.');
             e.target.reset();
         });
 
-        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
 
-        // Load doctors on page load
         loadDoctors();
     </script>
 </body>
