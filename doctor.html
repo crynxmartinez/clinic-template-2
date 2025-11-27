@@ -3249,7 +3249,24 @@
         
         function formatTime12h(time24) {
             if (!time24) return 'N/A';
-            const [hours, minutes] = time24.split(':').map(Number);
+            
+            // Handle various time formats
+            let hours, minutes;
+            
+            if (typeof time24 === 'string' && time24.includes(':')) {
+                [hours, minutes] = time24.split(':').map(Number);
+            } else if (typeof time24 === 'string') {
+                // Handle case where time is just a number like "2" or "14"
+                hours = parseInt(time24, 10);
+                minutes = 0;
+            } else {
+                return time24; // Return as-is if not a string
+            }
+            
+            // Validate parsed values
+            if (isNaN(hours)) return time24;
+            if (isNaN(minutes)) minutes = 0;
+            
             const period = hours >= 12 ? 'PM' : 'AM';
             const hour12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
             return `${hour12}:${minutes.toString().padStart(2, '0')} ${period}`;
